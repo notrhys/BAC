@@ -3,6 +3,7 @@ A Simple bedrock client specific anticheat for Geyser
 
 # Installation
 You will need:
+
 Atlas - 1.4.4
 
 Geyser & FloodGate
