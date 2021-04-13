@@ -31,15 +31,15 @@ public class FlightA extends Check {
                 boolean lastOnGround = user.getMovementProcessor().isLastGround();
 
                 if (!onGround && !lastOnGround) {
-                    double predict = this.lastDelta - 0.08 * 0.98;
-                    double prediction = Math.abs(user.getMovementProcessor().getDeltaY() - predict);
+                    double offset = this.lastDelta - 0.08 * 0.98;
+                    double delta = Math.abs(user.getMovementProcessor().getDeltaY() - offset);
 
-                    if (predict > 0.003 && prediction > 0.009) {
+                    if (offset > 0.003 && delta > 0.009) {
                         if ((this.threshold += 1.5) > 7.5) {
                             this.flag(user,
                                     "threshold: " + this.threshold,
-                                    "p: " + predict,
-                                    "pd: " + prediction
+                                    "p: " + offset,
+                                    "pd: " + delta
                             );
                         }
                     } else {
