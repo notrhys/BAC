@@ -30,7 +30,7 @@ public class SpeedA extends Check {
 
                     if (friction > this.getBestFriction(user)) {
                         this.flag(user,
-                                "friction=" + friction
+                               "friction=" + friction
                         );
                     }
                 }
@@ -47,7 +47,9 @@ public class SpeedA extends Check {
 
     boolean checkConditions(User user) {
         return user.getTick() < 60
-                && !user.getBlockData().piston
-                && !user.shouldCancel() && user.getBlockData().fenceTicks < 1;
+                || user.getBlockData().piston
+                || user.shouldCancel()
+                || user.getBlockData().fenceTicks > 0
+                || (user.getBlockData().snowTicks > 0 && user.getMovementProcessor().getDeltaY() < 0);
     }
 }
