@@ -33,13 +33,15 @@ public class FlightA extends Check {
                 if (!onGround && !lastOnGround) {
                     double offset = this.lastDelta - 0.08 * 0.98;
                     double delta = Math.abs(user.getMovementProcessor().getDeltaY() - offset);
+                    double best = this.getBestDelta(user);
 
-                    if (offset > 0.003 && delta > 0.009) {
+                    if (offset > 0.003 && delta > best) {
                         if ((this.threshold += 1.5) > 7.5) {
                             this.flag(user,
                                     "threshold: " + this.threshold,
                                     "p: " + offset,
-                                    "pd: " + delta
+                                    "pd: " + delta,
+                                    "b: " + best
                             );
                         }
                     } else {
@@ -54,9 +56,13 @@ public class FlightA extends Check {
         }
     }
 
+    double getBestDelta(User user) {
+        return (user.getBlockData().climbableTicks > 0 ? 0.0995 : 0.009);
+    }
+
     boolean checkConditions(User user) {
         return user.getBlockData().liquidTicks > 0
                 || user.getTick() < 60
-                || user.shouldCancel();
+                || user.shouldCancel() || user.getMovementProcessor().isBouncedOnSlime();
     }
 }

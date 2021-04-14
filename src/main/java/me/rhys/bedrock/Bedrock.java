@@ -38,6 +38,7 @@ public class Bedrock extends JavaPlugin {
         this.keepaliveHandler = new KeepaliveHandler();
         this.userManager = new UserManager();
         getServer().getPluginManager().registerEvents(new BukkitListener(), this);
+        getServer().getOnlinePlayers().forEach(player -> TinyProtocolHandler.getInstance().addChannel(player));
 
         //Resets violations after 1 minute
         this.executorService.scheduleAtFixedRate(() -> this.getUserManager().getUserMap().forEach((uuid, user) ->
@@ -47,8 +48,10 @@ public class Bedrock extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        this.userManager.getUserMap().forEach((uuid, user) ->
-                user.getExecutorService().shutdownNow());
+        this.userManager.getUserMap().forEach((uuid, user) -> {
+            TinyProtocolHandler.getInstance().removeChannel(user.getPlayer());
+            user.getExecutorService().shutdownNow();
+        });
         this.executorService.shutdownNow();
     }
 }

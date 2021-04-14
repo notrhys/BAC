@@ -21,7 +21,7 @@ import java.util.Map;
 public class ActionProcessor extends Processor {
 
     private final Map<Long, WrappedData> wrappedDataMap = new HashMap<>();
-    private EventTimer velocityTimer;
+    private EventTimer velocityTimer, serverPositionTimer;
 
     @Override
     public void onPacket(PacketEvent event) {
@@ -34,8 +34,12 @@ public class ActionProcessor extends Processor {
                 WrappedData wrappedData = this.wrappedDataMap.get(time);
                 switch (wrappedData.getAction()) {
                     case VELOCITY: {
-                        Bukkit.broadcastMessage("velocity reset");
                         this.velocityTimer.reset();
+                        break;
+                    }
+
+                    case SERVER_POSITION: {
+                        this.serverPositionTimer.reset();
                         break;
                     }
                 }
@@ -48,6 +52,7 @@ public class ActionProcessor extends Processor {
     @Override
     public void setupTimers(User user) {
         this.velocityTimer = new EventTimer(20, user);
+        this.serverPositionTimer = new EventTimer(20, user);
     }
 
     public void add(Actions action) {
@@ -56,7 +61,8 @@ public class ActionProcessor extends Processor {
     }
 
     public enum Actions {
-        VELOCITY
+        VELOCITY,
+        SERVER_POSITION
     }
 
     @Getter @AllArgsConstructor

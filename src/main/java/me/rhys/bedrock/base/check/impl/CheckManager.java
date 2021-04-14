@@ -5,6 +5,7 @@ import me.rhys.bedrock.base.check.api.Check;
 import me.rhys.bedrock.checks.movement.flight.FlightA;
 import me.rhys.bedrock.checks.movement.flight.FlightB;
 import me.rhys.bedrock.checks.movement.nofall.NoFallA;
+import me.rhys.bedrock.checks.movement.speed.SpeedA;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -17,6 +18,7 @@ public class CheckManager {
         this.checkList.add(new FlightA());
         this.checkList.add(new FlightB());
         this.checkList.add(new NoFallA());
+        this.checkList.add(new SpeedA());
 
         this.checkList.forEach(Check::setup);
     }

@@ -53,6 +53,7 @@ public class FlightB extends Check {
         return user.getBlockData().liquidTicks > 0
                 || user.getTick() < 60
                 || user.shouldCancel()
-                || user.getMovementProcessor().getLastBlockPlacePacketTimer().hasNotPassed();
+                || user.getMovementProcessor().getLastBlockPlacePacketTimer().hasNotPassed()
+                || user.getBlockData().climbableTicks > 0;
     }
 }

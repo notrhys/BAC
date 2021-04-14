@@ -15,8 +15,7 @@ public class BlockChecker {
         this.user = user;
     }
 
-    private boolean onGround;
-    private boolean nearLiquid;
+    private boolean onGround, nearLiquid, nearIce, climbable, slime, piston, snow, fence;
 
     public void check(BlockEntry blockEntry) {
         Block block = blockEntry.getBlock();
@@ -27,6 +26,8 @@ public class BlockChecker {
             this.onGround = true;
         }
 
+        boolean checkMovingUp = false;
+
         switch (block.getType()) {
             case WATER:
             case STATIONARY_WATER:
@@ -35,6 +36,53 @@ public class BlockChecker {
                 this.nearLiquid = true;
                 break;
             }
+
+            case ICE:
+            case PACKED_ICE: {
+                this.nearIce = true;
+                break;
+            }
+
+            case LADDER:
+            case VINE: {
+                this.climbable = true;
+                break;
+            }
+
+            case SLIME_BLOCK: {
+                this.slime = true;
+                break;
+            }
+
+            case PISTON_STICKY_BASE:
+            case PISTON_BASE:
+            case PISTON_EXTENSION:
+            case PISTON_MOVING_PIECE: {
+                this.piston = true;
+                checkMovingUp = true;
+                break;
+            }
+
+            case SNOW: {
+                this.snow = true;
+                break;
+            }
+
+            case COBBLE_WALL:
+            case FENCE: {
+                this.fence = true;
+                break;
+            }
+        }
+
+        if (checkMovingUp) {
+            /*
+            double boxY = checkedBox.getMaximum().getY();
+            double delta = Math.abs(boxY - user.getBlockData().lastBlockY);
+            //TODO: do something here..
+
+            user.getBlockData().lastBlockY = boxY;
+            */
         }
     }
 }

@@ -26,13 +26,20 @@ public class MovementProcessor extends Processor {
     private EventTimer lastGroundTimer;
     private EventTimer lastBlockPlacePacketTimer;
 
-    private boolean onGround, lastGround, positionYGround, lastPositionYGround;
+    private boolean onGround, lastGround, positionYGround, lastPositionYGround, bouncedOnSlime;
     private int groundTicks, airTicks, lagBackTicks, serverAirTicks, serverGroundTicks;
-    private double deltaY;
+    private double deltaY, deltaXZ, deltaX, deltaZ;
+    private PlayerLocation lastSlimeLocation;
 
     @Override
     public void onPacket(PacketEvent event) {
         switch (event.getType()) {
+
+            case Packet.Server.POSITION: {
+                user.getActionProcessor().add(ActionProcessor.Actions.SERVER_POSITION);
+                break;
+            }
+
             case Packet.Client.BLOCK_PLACE: {
                 this.lastBlockPlacePacketTimer.reset();
                 break;
@@ -75,6 +82,12 @@ public class MovementProcessor extends Processor {
                     }
                 }
 
+                this.deltaX = Math.abs(Math.abs(user.getCurrentLocation().getX())
+                        - Math.abs(user.getLastLocation().getX()));
+                this.deltaZ = Math.abs(Math.abs(user.getCurrentLocation().getZ())
+                        - Math.abs(user.getLastLocation().getZ()));
+                this.deltaXZ = Math.hypot(this.deltaX, this.deltaZ);
+
                 this.processBlocks();
                 this.user.setTick(this.user.getTick() + 1);
 
@@ -116,6 +129,12 @@ public class MovementProcessor extends Processor {
         user.getBlockData().lastOnGround = user.getBlockData().onGround;
         user.getBlockData().onGround = blockChecker.isOnGround();
         user.getBlockData().nearLiquid = blockChecker.isNearLiquid();
+        user.getBlockData().climbable = blockChecker.isClimbable();
+        user.getBlockData().nearIce = blockChecker.isNearIce();
+        user.getBlockData().slime = blockChecker.isSlime();
+        user.getBlockData().piston = blockChecker.isPiston();
+        user.getBlockData().snow = blockChecker.isSnow();
+        user.getBlockData().fence = blockChecker.isFence();
 
         if (user.getBlockData().onGround) {
             if (this.serverGroundTicks < 20) this.serverGroundTicks++;
@@ -125,10 +144,55 @@ public class MovementProcessor extends Processor {
             if (this.serverAirTicks < 20) this.serverAirTicks++;
         }
 
+        if (this.isOnGround() && user.getBlockData().slime) {
+            this.lastSlimeLocation = user.getCurrentLocation().clone();
+            this.bouncedOnSlime = true;
+        }
+
+        if (this.bouncedOnSlime) {
+            if (this.isOnGround() && this.isLastGround() && user.getBlockData().slimeTicks < 1) {
+                this.bouncedOnSlime = false;
+            }
+
+            if (this.lastSlimeLocation.distanceSquaredXZ(user.getCurrentLocation()) > 70) {
+                this.bouncedOnSlime = false;
+            }
+        }
+
         this.updateTicks();
     }
 
     void updateTicks() {
+        if (user.getBlockData().fence) {
+            user.getBlockData().fenceTicks += (user.getBlockData().fenceTicks > 0 ? 1 : 0);
+        } else {
+            user.getBlockData().fenceTicks -= (user.getBlockData().fenceTicks > 0 ? 1 : 0);
+        }
+
+        if (user.getBlockData().snow) {
+            user.getBlockData().snowTicks += (user.getBlockData().snowTicks < 20 ? 1 : 0);
+        } else {
+            user.getBlockData().snowTicks -= (user.getBlockData().snowTicks > 0 ? 1 : 0);
+        }
+
+        if (user.getBlockData().slime) {
+            user.getBlockData().slimeTicks += (user.getBlockData().slimeTicks < 20 ? 1 : 0);
+        } else {
+            user.getBlockData().slimeTicks -= (user.getBlockData().slimeTicks > 0 ? 1 : 0);
+        }
+
+        if (user.getBlockData().nearIce) {
+            user.getBlockData().iceTicks += (user.getBlockData().iceTicks < 20 ? 1 : 0);
+        } else {
+            user.getBlockData().iceTicks -= (user.getBlockData().iceTicks > 0 ? 1 : 0);
+        }
+
+        if (user.getBlockData().climbable) {
+            user.getBlockData().climbableTicks += (user.getBlockData().climbableTicks < 20 ? 1 : 0);
+        } else {
+            user.getBlockData().climbableTicks -= (user.getBlockData().climbableTicks > 0 ? 1 : 0);
+        }
+
         if (user.getBlockData().nearLiquid) {
             user.getBlockData().liquidTicks += (user.getBlockData().liquidTicks < 20 ? 1 : 0);
         } else {
@@ -140,5 +204,7 @@ public class MovementProcessor extends Processor {
     public void setupTimers(User user) {
         this.lastGroundTimer = new EventTimer(20, user);
         this.lastBlockPlacePacketTimer = new EventTimer(20, user);
+        this.lastSlimeLocation = new PlayerLocation(user.getPlayer().getWorld(), 0, 0, 0, 0,
+                0, false);
     }
 }

@@ -53,6 +53,6 @@ public class NoFallA extends Check {
     boolean checkConditions(User user) {
         return user.getBlockData().liquidTicks > 0
                 || user.getTick() < 60
-                || user.shouldCancel();
+                || user.shouldCancel() || user.getBlockData().climbableTicks > 0;
     }
 }
