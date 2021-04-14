@@ -1,10 +1,10 @@
 package me.rhys.bedrock.checks.movement.flight;
 
-import cc.funkemunky.api.tinyprotocol.api.Packet;
 import me.rhys.bedrock.base.check.api.Check;
 import me.rhys.bedrock.base.check.api.CheckInformation;
 import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.user.User;
+import me.rhys.bedrock.tinyprotocol.api.Packet;
 
 @CheckInformation(checkName = "Flight", checkType = "B", description = "Basic float check.")
 public class FlightB extends Check {
@@ -52,6 +52,7 @@ public class FlightB extends Check {
     boolean checkConditions(User user) {
         return user.getBlockData().liquidTicks > 0
                 || user.getTick() < 60
-                || user.shouldCancel();
+                || user.shouldCancel()
+                || user.getMovementProcessor().getLastBlockPlacePacketTimer().hasNotPassed();
     }
 }

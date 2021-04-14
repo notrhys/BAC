@@ -9,4 +9,5 @@ public @interface CheckInformation {
     String checkType() default "A";
     String description() default "Does something... with... packets?...";
     boolean enabled() default true;
+    int punishmentVL() default 20;
 }

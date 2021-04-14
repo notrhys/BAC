@@ -2,5 +2,3 @@ name: BedrockAnticheat
 version: 0.1
 main: me.rhys.bedrock.Bedrock
 description: Basic anticheat for Bedrock clients.
-depend:
-  - Atlas

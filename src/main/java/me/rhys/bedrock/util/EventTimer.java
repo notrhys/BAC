@@ -24,6 +24,16 @@ public class EventTimer {
         return (this.user.getTick() > maxTick && (this.user.getTick() - tick) > maxTick);
     }
 
+    public boolean hasNotPassed(int ctick) {
+        int maxTick = ctick + this.user.getConnectionProcessor().getClientTick();
+        return (this.user.getTick() > maxTick && (this.user.getTick() - tick) < maxTick);
+    }
+
+    public boolean passed(int ctick) {
+        int maxTick = ctick + this.user.getConnectionProcessor().getClientTick();
+        return (this.user.getTick() > maxTick && (this.user.getTick() - tick) > maxTick);
+    }
+
     public void reset() {
         this.tick = this.user.getTick();
     }

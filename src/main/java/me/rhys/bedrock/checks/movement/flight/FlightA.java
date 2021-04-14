@@ -1,10 +1,10 @@
 package me.rhys.bedrock.checks.movement.flight;
 
-import cc.funkemunky.api.tinyprotocol.api.Packet;
 import me.rhys.bedrock.base.check.api.Check;
 import me.rhys.bedrock.base.check.api.CheckInformation;
 import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.user.User;
+import me.rhys.bedrock.tinyprotocol.api.Packet;
 
 @CheckInformation(checkName = "Flight", description = "Basic flight check.")
 public class FlightA extends Check {

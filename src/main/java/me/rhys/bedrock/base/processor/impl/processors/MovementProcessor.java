@@ -1,40 +1,49 @@
-package me.rhys.bedrock.base.processor;
+package me.rhys.bedrock.base.processor.impl.processors;
 
-import cc.funkemunky.api.Atlas;
-import cc.funkemunky.api.tinyprotocol.api.Packet;
-import cc.funkemunky.api.tinyprotocol.packet.in.WrappedInFlyingPacket;
-import cc.funkemunky.api.utils.BlockUtils;
-import cc.funkemunky.api.utils.BoundingBox;
 import lombok.Getter;
+import lombok.Setter;
+import me.rhys.bedrock.Bedrock;
+import me.rhys.bedrock.base.event.PacketEvent;
+import me.rhys.bedrock.base.processor.api.Processor;
+import me.rhys.bedrock.base.processor.api.ProcessorInformation;
 import me.rhys.bedrock.base.user.User;
+import me.rhys.bedrock.tinyprotocol.api.Packet;
+import me.rhys.bedrock.tinyprotocol.packet.in.WrappedInFlyingPacket;
+import me.rhys.bedrock.util.BlockUtil;
 import me.rhys.bedrock.util.EventTimer;
+import me.rhys.bedrock.util.MathUtil;
 import me.rhys.bedrock.util.PlayerLocation;
 import me.rhys.bedrock.util.block.BlockChecker;
 import me.rhys.bedrock.util.block.BlockEntry;
+import me.rhys.bedrock.util.box.BoundingBox;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
-@Getter
-public class MovementProcessor {
-    private final User user;
+@ProcessorInformation(name = "Movement")
+@Getter @Setter
+public class MovementProcessor extends Processor {
     private EventTimer lastGroundTimer;
-
-    public MovementProcessor(User user) {
-        this.user = user;
-        this.setupTimers();
-    }
+    private EventTimer lastBlockPlacePacketTimer;
 
     private boolean onGround, lastGround, positionYGround, lastPositionYGround;
-    private int groundTicks, airTicks;
+    private int groundTicks, airTicks, lagBackTicks, serverAirTicks, serverGroundTicks;
     private double deltaY;
 
-    public void handle(String type, Object packet) {
-        switch (type) {
+    @Override
+    public void onPacket(PacketEvent event) {
+        switch (event.getType()) {
+            case Packet.Client.BLOCK_PLACE: {
+                this.lastBlockPlacePacketTimer.reset();
+                break;
+            }
+
             case Packet.Client.FLYING:
             case Packet.Client.LOOK:
             case Packet.Client.POSITION_LOOK:
             case Packet.Client.POSITION: {
-                WrappedInFlyingPacket wrappedInFlyingPacket = new WrappedInFlyingPacket(packet, this.user.getPlayer());
+                WrappedInFlyingPacket wrappedInFlyingPacket = new WrappedInFlyingPacket(event.getPacket(),
+                        this.user.getPlayer());
 
                 double x = wrappedInFlyingPacket.getX();
                 double y = wrappedInFlyingPacket.getY();
@@ -68,10 +77,16 @@ public class MovementProcessor {
 
                 this.processBlocks();
                 this.user.setTick(this.user.getTick() + 1);
+
+                if (this.lagBackTicks-- > 0 && user.getTick() % 5 == 0) {
+                    user.getPlayer().teleport(MathUtil.getGroundLocation(user),
+                            PlayerTeleportEvent.TeleportCause.PLUGIN);
+                }
                 break;
             }
         }
     }
+
 
     void processBlocks() {
         boolean badVector = Math.abs(user.getCurrentLocation().toVector().length()
@@ -84,10 +99,10 @@ public class MovementProcessor {
         World world = user.getPlayer().getWorld();
         BlockChecker blockChecker = new BlockChecker(this.user);
 
-        Atlas.getInstance().getBlockBoxManager().getBlockBox()
+        Bedrock.getInstance().getBlockBoxManager().getBlockBox()
                 .getCollidingBoxes(world, user.getBoundingBox()
                         .grow(0.35f, 0.3f, 0.35f)).parallelStream().forEach(boundingBox -> {
-            Block block = BlockUtils.getBlock(boundingBox.getMinimum().toLocation(world));
+            Block block = BlockUtil.getBlock(boundingBox.getMinimum().toLocation(world));
 
             if (block != null) {
                 blockChecker.check(new BlockEntry(block, boundingBox));
@@ -101,6 +116,15 @@ public class MovementProcessor {
         user.getBlockData().lastOnGround = user.getBlockData().onGround;
         user.getBlockData().onGround = blockChecker.isOnGround();
         user.getBlockData().nearLiquid = blockChecker.isNearLiquid();
+
+        if (user.getBlockData().onGround) {
+            if (this.serverGroundTicks < 20) this.serverGroundTicks++;
+            this.serverAirTicks = 0;
+        } else {
+            this.serverGroundTicks = 0;
+            if (this.serverAirTicks < 20) this.serverAirTicks++;
+        }
+
         this.updateTicks();
     }
 
@@ -112,7 +136,9 @@ public class MovementProcessor {
         }
     }
 
-    void setupTimers() {
-        this.lastGroundTimer = new EventTimer(20, this.user);
+    @Override
+    public void setupTimers(User user) {
+        this.lastGroundTimer = new EventTimer(20, user);
+        this.lastBlockPlacePacketTimer = new EventTimer(20, user);
     }
 }

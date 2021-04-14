@@ -1,28 +1,28 @@
-package me.rhys.bedrock.base.processor;
+package me.rhys.bedrock.base.processor.impl.processors;
 
-import cc.funkemunky.api.tinyprotocol.api.Packet;
-import cc.funkemunky.api.tinyprotocol.packet.in.WrappedInKeepAlivePacket;
 import lombok.Getter;
-import me.rhys.bedrock.base.user.User;
+import lombok.Setter;
+import me.rhys.bedrock.base.event.PacketEvent;
+import me.rhys.bedrock.base.processor.api.Processor;
+import me.rhys.bedrock.base.processor.api.ProcessorInformation;
+import me.rhys.bedrock.tinyprotocol.api.Packet;
+import me.rhys.bedrock.tinyprotocol.packet.in.WrappedInKeepAlivePacket;
 import me.rhys.bedrock.util.EvictingMap;
 
 import java.util.Map;
 
-@Getter
-public class ConnectionProcessor {
-    private final User user;
-
-    public ConnectionProcessor(User user) {
-        this.user = user;
-    }
+@ProcessorInformation(name = "Connection")
+@Getter @Setter
+public class ConnectionProcessor extends Processor {
 
     private final Map<Long, Long> sentKeepAlives = new EvictingMap<>(100);
     private int ping;
     private int clientTick;
 
-    public void handle(String type, Object packet) {
-        if (type.equalsIgnoreCase(Packet.Client.KEEP_ALIVE)) {
-            WrappedInKeepAlivePacket wrappedInKeepAlivePacket = new WrappedInKeepAlivePacket(packet,
+    @Override
+    public void onPacket(PacketEvent event) {
+        if (event.getType().equalsIgnoreCase(Packet.Client.KEEP_ALIVE)) {
+            WrappedInKeepAlivePacket wrappedInKeepAlivePacket = new WrappedInKeepAlivePacket(event.getPacket(),
                     this.user.getPlayer());
 
             if (this.user.getConnectionMap().containsKey(wrappedInKeepAlivePacket.getTime())) {

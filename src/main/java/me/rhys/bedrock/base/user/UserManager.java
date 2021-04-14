@@ -5,22 +5,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.geysermc.floodgate.FloodgateAPI;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public class UserManager {
-    private final Map<UUID, User> userMap = new HashMap<>();
-
-    public UserManager() {
-        Bukkit.getServer().getOnlinePlayers().forEach(this::addUser);
-    }
+    private final Map<UUID, User> userMap = new ConcurrentHashMap<>();
 
     public void addUser(Player player) {
-        if (this.isBedrock(player)) {
-            this.userMap.put(player.getUniqueId(), new User(player));
-        }
+        this.userMap.put(player.getUniqueId(), new User(player));
     }
 
     public User getUser(Player player) {
@@ -29,9 +23,5 @@ public class UserManager {
 
     public void removeUser(Player player) {
         this.userMap.remove(player.getUniqueId());
-    }
-
-    boolean isBedrock(Player player) {
-        return FloodgateAPI.isBedrockPlayer(player);
     }
 }
