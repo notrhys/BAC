@@ -42,7 +42,7 @@ public class SpeedA extends Check {
 
     double getBestFriction(User user) {
         return (user.getActionProcessor().getServerPositionTimer().hasNotPassed()
-                ? 3 : (user.getBlockData().snowTicks > 0 ? 5.04 : (user.getBlockData().iceTicks > 0 ? 13 : 1.08)));
+                ? 3 : (user.getBlockData().iceTicks > 0 ? 13 : 1.08));
     }
 
     boolean checkConditions(User user) {
@@ -50,6 +50,8 @@ public class SpeedA extends Check {
                 || user.getBlockData().piston
                 || user.shouldCancel()
                 || user.getBlockData().fenceTicks > 0
-                || (user.getBlockData().snowTicks > 0 && user.getMovementProcessor().getDeltaY() < 0);
+                || user.getBlockData().snowTicks > 0
+                || user.getBlockData().liquidTicks > 0
+                || user.getActionProcessor().getServerPositionTimer().hasNotPassed();
     }
 }

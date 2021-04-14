@@ -135,6 +135,9 @@ public class MovementProcessor extends Processor {
         user.getBlockData().piston = blockChecker.isPiston();
         user.getBlockData().snow = blockChecker.isSnow();
         user.getBlockData().fence = blockChecker.isFence();
+        user.getBlockData().bed = blockChecker.isBed();
+        user.getBlockData().stair = blockChecker.isStair();
+        user.getBlockData().slab = blockChecker.isSlab();
 
         if (user.getBlockData().onGround) {
             if (this.serverGroundTicks < 20) this.serverGroundTicks++;
@@ -163,6 +166,24 @@ public class MovementProcessor extends Processor {
     }
 
     void updateTicks() {
+        if (user.getBlockData().stair) {
+            user.getBlockData().stairTicks += (user.getBlockData().stairTicks > 0 ? 1 : 0);
+        } else {
+            user.getBlockData().stairTicks -= (user.getBlockData().stairTicks > 0 ? 1 : 0);
+        }
+
+        if (user.getBlockData().slab) {
+            user.getBlockData().slabTicks += (user.getBlockData().slabTicks > 0 ? 1 : 0);
+        } else {
+            user.getBlockData().slabTicks -= (user.getBlockData().slabTicks > 0 ? 1 : 0);
+        }
+
+        if (user.getBlockData().bed) {
+            user.getBlockData().bedTicks += (user.getBlockData().bedTicks > 0 ? 1 : 0);
+        } else {
+            user.getBlockData().bedTicks -= (user.getBlockData().bedTicks > 0 ? 1 : 0);
+        }
+
         if (user.getBlockData().fence) {
             user.getBlockData().fenceTicks += (user.getBlockData().fenceTicks > 0 ? 1 : 0);
         } else {
@@ -188,6 +209,7 @@ public class MovementProcessor extends Processor {
         }
 
         if (user.getBlockData().climbable) {
+            user.getBlockData().climbableTimer.reset();
             user.getBlockData().climbableTicks += (user.getBlockData().climbableTicks < 20 ? 1 : 0);
         } else {
             user.getBlockData().climbableTicks -= (user.getBlockData().climbableTicks > 0 ? 1 : 0);

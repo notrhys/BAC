@@ -2,10 +2,7 @@ package me.rhys.bedrock.base.processor.impl;
 
 import lombok.Getter;
 import me.rhys.bedrock.base.processor.api.Processor;
-import me.rhys.bedrock.base.processor.impl.processors.ActionProcessor;
-import me.rhys.bedrock.base.processor.impl.processors.CombatProcessor;
-import me.rhys.bedrock.base.processor.impl.processors.ConnectionProcessor;
-import me.rhys.bedrock.base.processor.impl.processors.MovementProcessor;
+import me.rhys.bedrock.base.processor.impl.processors.*;
 import me.rhys.bedrock.base.user.User;
 
 import java.util.LinkedList;
@@ -25,6 +22,8 @@ public class ProcessorManager {
         this.processors.add(new ConnectionProcessor());
         this.processors.add(new CombatProcessor());
         this.processors.add(new ActionProcessor());
+        this.processors.add(new PotionProcessor());
+
         this.processors.forEach(processor -> processor.setup(this.user));
     }
 

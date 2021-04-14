@@ -76,4 +76,9 @@ public class Check implements CallableEvent {
     public void onPacket(PacketEvent event) {
         //
     }
+
+    @Override
+    public void setupTimers(User user) {
+        //
+    }
 }

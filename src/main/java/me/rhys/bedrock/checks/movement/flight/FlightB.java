@@ -54,6 +54,6 @@ public class FlightB extends Check {
                 || user.getTick() < 60
                 || user.shouldCancel()
                 || user.getMovementProcessor().getLastBlockPlacePacketTimer().hasNotPassed()
-                || user.getBlockData().climbableTicks > 0;
+                || user.getBlockData().climbableTicks > 0 || user.getBlockData().bedTicks > 0;
     }
 }

@@ -3,7 +3,11 @@ package me.rhys.bedrock.util.block;
 import lombok.Getter;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.util.box.BoundingBox;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.material.MaterialData;
+import org.bukkit.material.Step;
+import org.bukkit.material.WoodenStep;
 
 @Getter
 public class BlockChecker {
@@ -15,7 +19,7 @@ public class BlockChecker {
         this.user = user;
     }
 
-    private boolean onGround, nearLiquid, nearIce, climbable, slime, piston, snow, fence;
+    private boolean onGround, nearLiquid, nearIce, climbable, slime, piston, snow, fence, bed, stair, slab, movingUp;
 
     public void check(BlockEntry blockEntry) {
         Block block = blockEntry.getBlock();
@@ -27,6 +31,7 @@ public class BlockChecker {
         }
 
         boolean checkMovingUp = false;
+        Class<? extends MaterialData> blockData = block.getType().getData();
 
         switch (block.getType()) {
             case WATER:
@@ -59,7 +64,6 @@ public class BlockChecker {
             case PISTON_EXTENSION:
             case PISTON_MOVING_PIECE: {
                 this.piston = true;
-                checkMovingUp = true;
                 break;
             }
 
@@ -73,16 +77,44 @@ public class BlockChecker {
                 this.fence = true;
                 break;
             }
+
+            case BED:
+            case BED_BLOCK: {
+                this.bed = true;
+                break;
+            }
+
+            case SANDSTONE_STAIRS:
+            case SMOOTH_STAIRS:
+            case SPRUCE_WOOD_STAIRS:
+            case ACACIA_STAIRS:
+            case BIRCH_WOOD_STAIRS:
+            case BRICK_STAIRS:
+            case COBBLESTONE_STAIRS:
+            case DARK_OAK_STAIRS:
+            case JUNGLE_WOOD_STAIRS:
+            case NETHER_BRICK_STAIRS:
+            case QUARTZ_STAIRS:
+            case RED_SANDSTONE_STAIRS:
+            case WOOD_STAIRS: {
+                this.stair = true;
+                checkMovingUp = true;
+                break;
+            }
+        }
+
+        if (block.getType() == Material.STEP
+                || blockData == Step.class
+                || blockData == WoodenStep.class) {
+            slab = true;
+            checkMovingUp = true;
         }
 
         if (checkMovingUp) {
-            /*
             double boxY = checkedBox.getMaximum().getY();
             double delta = Math.abs(boxY - user.getBlockData().lastBlockY);
-            //TODO: do something here..
-
+            this.movingUp = delta > 0 && Math.abs(user.getMovementProcessor().getDeltaY()) > 0 && this.onGround;
             user.getBlockData().lastBlockY = boxY;
-            */
         }
     }
 }

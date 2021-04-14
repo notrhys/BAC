@@ -5,9 +5,7 @@ import lombok.Setter;
 import me.rhys.bedrock.base.check.impl.CheckManager;
 import me.rhys.bedrock.base.event.EventManager;
 import me.rhys.bedrock.base.processor.impl.ProcessorManager;
-import me.rhys.bedrock.base.processor.impl.processors.ActionProcessor;
-import me.rhys.bedrock.base.processor.impl.processors.ConnectionProcessor;
-import me.rhys.bedrock.base.processor.impl.processors.MovementProcessor;
+import me.rhys.bedrock.base.processor.impl.processors.*;
 import me.rhys.bedrock.base.user.objects.BlockData;
 import me.rhys.bedrock.tinyprotocol.api.TinyProtocolHandler;
 import me.rhys.bedrock.util.EvictingMap;
@@ -34,6 +32,8 @@ public class User {
     private MovementProcessor movementProcessor;
     private ConnectionProcessor connectionProcessor;
     private ActionProcessor actionProcessor;
+    private PotionProcessor potionProcessor;
+    private CombatProcessor combatProcessor;
 
     private final Map<Long, Long> connectionMap = new EvictingMap<>(100);
     private int tick;
@@ -49,11 +49,12 @@ public class User {
         this.player = player;
         this.uuid = player.getUniqueId();
         this.executorService = Executors.newSingleThreadScheduledExecutor();
-        this.checkManager.setupChecks();
+        this.checkManager.setupChecks(this);
         this.eventManager = new EventManager(this);
         this.processorManager = new ProcessorManager(this);
         this.processorManager.setup();
         this.setupProcessors();
+        this.blockData.setupTimers(this);
         this.alerts = player.isOp() || player.hasPermission("anticheat.alerts");
     }
 
@@ -61,6 +62,8 @@ public class User {
         this.connectionProcessor = (ConnectionProcessor) this.processorManager.forClass(ConnectionProcessor.class);
         this.movementProcessor = (MovementProcessor) this.processorManager.forClass(MovementProcessor.class);
         this.actionProcessor = (ActionProcessor) this.processorManager.forClass(ActionProcessor.class);
+        this.potionProcessor = (PotionProcessor) this.processorManager.forClass(PotionProcessor.class);
+        this.combatProcessor = (CombatProcessor) this.processorManager.forClass(CombatProcessor.class);
     }
 
     public void sendPacket(Object packet) {
