@@ -100,6 +100,7 @@ public class SpeedB extends Check {
                 || user.getBlockData().slimeTicks > 0
                 || user.getBlockData().slimeTimer.hasNotPassed()
                 || user.getBlockData().stairSlabTimer.hasNotPassed()
+                || user.getBlockData().liquidTicks > 0
                 || user.getTick() < 60;
     }
 

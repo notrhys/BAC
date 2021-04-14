@@ -52,6 +52,9 @@ public class FlightC extends Check {
     }
 
     boolean checkConditions(User user) {
-        return user.getBlockData().slimeTicks > 0 || user.shouldCancel();
+        return user.getBlockData().slimeTicks > 0
+                || user.getBlockData().climbableTicks > 0
+                || user.shouldCancel()
+                || user.getBlockData().liquidTicks > 0;
     }
 }
