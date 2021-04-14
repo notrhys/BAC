@@ -9,12 +9,13 @@ public class BlockData {
     public int liquidTicks, climbableTicks, iceTicks, slimeTicks, snowTicks, fenceTicks, bedTicks,
             stairTicks, slabTicks, underBlockTicks;
     public double lastBlockY;
-    public EventTimer movingUpTimer, climbableTimer, iceTimer, slimeTimer;
+    public EventTimer movingUpTimer, climbableTimer, iceTimer, slimeTimer, stairSlabTimer;
 
     public void setupTimers(User user) {
         this.movingUpTimer = new EventTimer(20, user);
         this.climbableTimer = new EventTimer(60, user);
         this.iceTimer = new EventTimer(100, user);
         this.slimeTimer = new EventTimer(60, user);
+        this.stairSlabTimer = new EventTimer(100, user);
     }
 }

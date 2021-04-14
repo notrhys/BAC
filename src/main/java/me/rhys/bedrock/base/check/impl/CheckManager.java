@@ -5,6 +5,7 @@ import me.rhys.bedrock.base.check.api.Check;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.checks.movement.flight.FlightA;
 import me.rhys.bedrock.checks.movement.flight.FlightB;
+import me.rhys.bedrock.checks.movement.flight.FlightC;
 import me.rhys.bedrock.checks.movement.nofall.NoFallA;
 import me.rhys.bedrock.checks.movement.speed.SpeedA;
 import me.rhys.bedrock.checks.movement.speed.SpeedB;
@@ -19,6 +20,7 @@ public class CheckManager {
     public void setupChecks(User user) {
         this.checkList.add(new FlightA());
         this.checkList.add(new FlightB());
+        this.checkList.add(new FlightC());
         this.checkList.add(new NoFallA());
         this.checkList.add(new SpeedA());
         this.checkList.add(new SpeedB());

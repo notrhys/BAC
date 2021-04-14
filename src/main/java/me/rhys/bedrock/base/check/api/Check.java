@@ -15,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Getter @Setter
 public class Check implements CallableEvent {
     private String checkName, checkType, description;
-    private boolean enabled, punished;
+    private boolean enabled, punished, lagBack, canPunish;
     private int violation, maxViolation;
 
     private final String alertPrefix = ChatColor.DARK_GRAY + "[" + ChatColor.RED
@@ -29,6 +29,8 @@ public class Check implements CallableEvent {
             this.description = checkInformation.description();
             this.enabled = checkInformation.enabled();
             this.maxViolation = checkInformation.punishmentVL();
+            this.lagBack = checkInformation.lagBack();
+            this.canPunish = checkInformation.canPunish();
         } else {
             Bedrock.getInstance().getLogger().warning("Unable to find CheckInformation annotation" +
                     " in the class: " + getClass().getSimpleName());
@@ -44,7 +46,7 @@ public class Check implements CallableEvent {
             }
         }
 
-        if (this.violation > this.maxViolation) {
+        if (this.canPunish && this.violation > this.maxViolation) {
             this.violation = 0;
 
             new BukkitRunnable() {
@@ -68,8 +70,9 @@ public class Check implements CallableEvent {
                 .filter(entry -> entry.getValue().isAlerts()).forEach(entry ->
                 entry.getValue().getPlayer().sendMessage(alert));
 
+
         // LOL
-        user.getMovementProcessor().setLagBackTicks(ThreadLocalRandom.current().nextInt(160));
+        user.getMovementProcessor().setLagBackTicks((this.lagBack ? 5 : 0));
     }
 
     @Override

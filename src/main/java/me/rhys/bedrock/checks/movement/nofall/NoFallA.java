@@ -29,11 +29,10 @@ public class NoFallA extends Check {
                     return;
                 }
 
-                if (user.getMovementProcessor().getServerAirTicks() > 15
-                        && !user.getBlockData().onGround && !user.getBlockData().onGround) {
-                    double deltaY = Math.abs(user.getMovementProcessor().getDeltaY());
+                if (user.getMovementProcessor().getServerAirTicks() > 15 && !user.getBlockData().onGround) {
+                    if (user.getMovementProcessor().isOnGround()) {
+                        double deltaY = Math.abs(user.getMovementProcessor().getDeltaY());
 
-                    if (deltaY > 0 && !user.getMovementProcessor().isOnGround()) {
                         if ((this.threshold += .75) > 16) {
                             this.flag(user,
                                     "threshold=" + this.threshold,

@@ -175,12 +175,14 @@ public class MovementProcessor extends Processor {
         }
 
         if (user.getBlockData().stair) {
+            user.getBlockData().stairSlabTimer.reset();
             user.getBlockData().stairTicks += (user.getBlockData().stairTicks < 20 ? 1 : 0);
         } else {
             user.getBlockData().stairTicks -= (user.getBlockData().stairTicks > 0 ? 1 : 0);
         }
 
         if (user.getBlockData().slab) {
+            user.getBlockData().stairSlabTimer.reset();
             user.getBlockData().slabTicks += (user.getBlockData().slabTicks < 20 ? 1 : 0);
         } else {
             user.getBlockData().slabTicks -= (user.getBlockData().slabTicks > 0 ? 1 : 0);

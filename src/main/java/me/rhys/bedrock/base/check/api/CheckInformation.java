@@ -10,4 +10,6 @@ public @interface CheckInformation {
     String description() default "Does something... with... packets?...";
     boolean enabled() default true;
     int punishmentVL() default 20;
+    boolean lagBack() default true;
+    boolean canPunish() default true;
 }

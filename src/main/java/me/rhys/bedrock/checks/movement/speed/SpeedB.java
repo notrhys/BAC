@@ -90,16 +90,17 @@ public class SpeedB extends Check {
     }
 
     boolean checkConditions(User user) {
-        return user.shouldCancel() || ((user.getBlockData().movingUpTimer.hasNotPassed()
-                || Math.abs(user.getMovementProcessor().getDeltaY()) > 0)
-                && (user.getBlockData().slabTicks > 0 || user.getBlockData().stairTicks > 0))
+        return user.shouldCancel() || user.getBlockData().slabTicks > 0
+                || user.getBlockData().stairTicks > 0
                 || user.getActionProcessor().getServerPositionTimer().hasNotPassed()
                 || user.getCombatProcessor().getPreVelocityTimer().hasNotPassed()
                 || user.getBlockData().underBlockTicks > 0
                 || user.getBlockData().iceTimer.hasNotPassed()
                 || user.getBlockData().snowTicks > 0
                 || user.getBlockData().slimeTicks > 0
-                || user.getBlockData().slimeTimer.hasNotPassed();
+                || user.getBlockData().slimeTimer.hasNotPassed()
+                || user.getBlockData().stairSlabTimer.hasNotPassed()
+                || user.getTick() < 60;
     }
 
     void processDeltaY(User user) {
