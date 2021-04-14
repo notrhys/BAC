@@ -19,7 +19,8 @@ public class BlockChecker {
         this.user = user;
     }
 
-    private boolean onGround, nearLiquid, nearIce, climbable, slime, piston, snow, fence, bed, stair, slab, movingUp;
+    private boolean onGround, nearLiquid, nearIce, climbable, slime, piston, snow, fence, bed,
+            stair, slab, movingUp, underBlock;
 
     public void check(BlockEntry blockEntry) {
         Block block = blockEntry.getBlock();
@@ -32,6 +33,13 @@ public class BlockChecker {
 
         boolean checkMovingUp = false;
         Class<? extends MaterialData> blockData = block.getType().getData();
+
+        if ((checkedBox.getMaximum().getY()) >= boundingBox.getMaximum().getY()
+                && checkedBox.collidesVertically(boundingBox
+                .add(0, 0, 0, 0, 0.35f, 0))
+                && block.getType() != Material.DOUBLE_PLANT) {
+            this.underBlock = true;
+        }
 
         switch (block.getType()) {
             case WATER:

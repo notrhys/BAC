@@ -40,7 +40,7 @@ public class SpeedB extends Check {
                             }
 
                             if (deltaXZ > max) {
-                                if ((this.groundThreshold += 1.2) > 3.5) {
+                                if ((this.groundThreshold += 1.2) > 4) {
                                     this.flag(user,
                                             "tag: " + tag.name(),
                                             "speed: " + deltaXZ,
@@ -50,7 +50,7 @@ public class SpeedB extends Check {
                                     );
                                 }
                             } else {
-                                this.groundThreshold -= (this.groundThreshold > 0 ? 0.4 : 0);
+                                this.groundThreshold -= (this.groundThreshold > 0 ? .8 : 0);
                             }
                             break;
                         }
@@ -94,7 +94,12 @@ public class SpeedB extends Check {
                 || Math.abs(user.getMovementProcessor().getDeltaY()) > 0)
                 && (user.getBlockData().slabTicks > 0 || user.getBlockData().stairTicks > 0))
                 || user.getActionProcessor().getServerPositionTimer().hasNotPassed()
-                || user.getCombatProcessor().getPreVelocityTimer().hasNotPassed();
+                || user.getCombatProcessor().getPreVelocityTimer().hasNotPassed()
+                || user.getBlockData().underBlockTicks > 0
+                || user.getBlockData().iceTimer.hasNotPassed()
+                || user.getBlockData().snowTicks > 0
+                || user.getBlockData().slimeTicks > 0
+                || user.getBlockData().slimeTimer.hasNotPassed();
     }
 
     void processDeltaY(User user) {
