@@ -16,6 +16,7 @@ import me.rhys.bedrock.util.PlayerLocation;
 import me.rhys.bedrock.util.block.BlockChecker;
 import me.rhys.bedrock.util.block.BlockEntry;
 import me.rhys.bedrock.util.box.BoundingBox;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -118,9 +119,26 @@ public class MovementProcessor extends Processor {
         World world = user.getPlayer().getWorld();
         BlockChecker blockChecker = new BlockChecker(this.user);
 
+        boolean climable = false;
+        if (user.getPlayer().getLocation() != null && user.getPlayer().getWorld() != null) {
+            Block bukkitBlock = BlockUtil.getBlock(user.getPlayer().getLocation());
+
+            if (bukkitBlock != null) {
+                Material material = bukkitBlock.getType();
+
+                if (material != null) {
+                    climable = ((material == Material.LADDER || material == Material.VINE));
+                }
+            }
+        }
+
+        float offset = ((climable || user.getBlockData().iceTicks > 0
+                || (user.getCurrentLocation().getY()
+                - user.getLastLocation().getY()) < -1.00f ? 0.8f : 0.3f));
+
         Bedrock.getInstance().getBlockBoxManager().getBlockBox()
                 .getCollidingBoxes(world, user.getBoundingBox()
-                        .grow(0.35f, 0.3f, 0.35f)).parallelStream().forEach(boundingBox -> {
+                        .grow(offset, 0.3f, offset)).parallelStream().forEach(boundingBox -> {
             Block block = BlockUtil.getBlock(boundingBox.getMinimum().toLocation(world));
 
             if (block != null) {
@@ -145,6 +163,7 @@ public class MovementProcessor extends Processor {
         user.getBlockData().stair = blockChecker.isStair();
         user.getBlockData().slab = blockChecker.isSlab();
         user.getBlockData().underBlock = blockChecker.isUnderBlock();
+        user.getBlockData().web = blockChecker.isWeb();
 
         if (user.getBlockData().onGround) {
             if (this.serverGroundTicks < 20) this.serverGroundTicks++;
@@ -173,6 +192,12 @@ public class MovementProcessor extends Processor {
     }
 
     void updateTicks() {
+
+        if (user.getBlockData().web) {
+            user.getBlockData().webTicks += (user.getBlockData().webTicks < 20 ? 1 : 0);
+        } else {
+            user.getBlockData().webTicks -= (user.getBlockData().webTicks > 0 ? 1 : 0);
+        }
 
         if (user.getBlockData().underBlock) {
             user.getBlockData().underBlockTicks += (user.getBlockData().underBlockTicks < 20 ? 1 : 0);

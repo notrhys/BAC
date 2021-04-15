@@ -5,9 +5,9 @@ import me.rhys.bedrock.util.EventTimer;
 
 public class BlockData {
     public boolean onGround, lastOnGround, nearLiquid, nearIce, climbable, slime, piston, snow, fence,
-            bed, stair, slab, underBlock;
+            bed, stair, slab, underBlock, web;
     public int liquidTicks, climbableTicks, iceTicks, slimeTicks, snowTicks, fenceTicks, bedTicks,
-            stairTicks, slabTicks, underBlockTicks;
+            stairTicks, slabTicks, underBlockTicks, webTicks;
     public double lastBlockY;
     public EventTimer movingUpTimer, climbableTimer, iceTimer, slimeTimer, stairSlabTimer;
 

@@ -33,10 +33,10 @@ public class SpeedB extends Check {
                             boolean expand = this.lastJumpTimer.hasNotPassed();
 
                             //Not the best but will do the job for now.
-                            double max = (expand ? .6325 : .29);
+                            double max = (expand ? .6325 : .2925);
 
                             if (user.getPotionProcessor().getSpeedTicks() > 0) {
-                                max += (user.getPotionProcessor().getSpeedAmplifier() * .2);
+                                max += (user.getPotionProcessor().getSpeedAmplifier() * 0.060);
                             }
 
                             if (deltaXZ > max) {
@@ -101,7 +101,7 @@ public class SpeedB extends Check {
                 || user.getBlockData().slimeTimer.hasNotPassed()
                 || user.getBlockData().stairSlabTimer.hasNotPassed()
                 || user.getBlockData().liquidTicks > 0 || user.getBlockData().climbableTicks > 0
-                || user.getTick() < 60;
+                || user.getTick() < 120;
     }
 
     void processDeltaY(User user) {

@@ -25,8 +25,8 @@ public class KillauraA extends Check {
             case Packet.Client.USE_ENTITY: {
                 long delta = (System.currentTimeMillis() - this.lastPosition);
 
-                if (delta < 25L) {
-                    if ((this.threshold += 0.95) > 1.8) {
+                if (delta < 15L) {
+                    if ((this.threshold += 0.95) > 3.5) {
                         this.flag(user,
                                 "threshold: " + this.threshold,
                                 "time: " + delta

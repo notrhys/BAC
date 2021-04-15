@@ -36,7 +36,8 @@ public class FlightA extends Check {
                     double best = this.getBestDelta(user);
 
                     if (offset > 0.003 && delta > best) {
-                        if ((this.threshold += 1.5) > 7.5) {
+                        if ((this.threshold += 1.5) > (user.getBlockData().stairTicks > 0
+                                || user.getBlockData().slabTicks > 0 ? 10 : 7.5)) {
                             this.flag(user,
                                     "threshold: " + this.threshold,
                                     "p: " + offset,

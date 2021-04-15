@@ -20,7 +20,7 @@ public class BlockChecker {
     }
 
     private boolean onGround, nearLiquid, nearIce, climbable, slime, piston, snow, fence, bed,
-            stair, slab, movingUp, underBlock;
+            stair, slab, movingUp, underBlock, web;
 
     public void check(BlockEntry blockEntry) {
         Block block = blockEntry.getBlock();
@@ -107,6 +107,11 @@ public class BlockChecker {
             case WOOD_STAIRS: {
                 this.stair = true;
                 checkMovingUp = true;
+                break;
+            }
+
+            case WEB: {
+                this.web = true;
                 break;
             }
         }

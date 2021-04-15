@@ -49,6 +49,7 @@ public class SpeedA extends Check {
         return user.getTick() < 60
                 || user.getBlockData().piston
                 || user.shouldCancel()
+                || user.getBlockData().slimeTicks > 0
                 || user.getBlockData().fenceTicks > 0
                 || user.getBlockData().snowTicks > 0
                 || user.getBlockData().liquidTicks > 0
