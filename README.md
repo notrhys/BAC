@@ -1,6 +1,8 @@
 # BAC
 A Simple bedrock client specific anticheat for Geyser
 
+Currently only supports spigots 1.7.10 to 1.8.x (will be adding support for more versions soon)
+
 # Installation
 You will need:
 
