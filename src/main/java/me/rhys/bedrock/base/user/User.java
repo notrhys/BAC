@@ -43,8 +43,6 @@ public class User {
             false);
     private PlayerLocation lastLocation = currentLocation;
 
-    private boolean alerts;
-
     public User(Player player) {
         this.player = player;
         this.uuid = player.getUniqueId();
@@ -55,7 +53,6 @@ public class User {
         this.processorManager.setup();
         this.setupProcessors();
         this.blockData.setupTimers(this);
-        this.alerts = player.isOp() || player.hasPermission("anticheat.alerts");
     }
 
     private void setupProcessors() {

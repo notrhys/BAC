@@ -11,10 +11,15 @@ public class MathUtil {
         World world = user.getPlayer().getWorld();
 
         Location location = user.getCurrentLocation().toBukkitLocation(world);
+        int i = 0;
         while (!BlockUtil.getBlock(location).getRelative(BlockFace.DOWN).getType().isSolid()
-                && location.getY() != 0){
+                && location.getY() != 0) {
+            if (i++ > 20) {
+                break;
+            }
             location.add(0, -1, 0);
         }
+
 
         if (location.getY() == 0){
             return user.getCurrentLocation().toBukkitLocation(world);

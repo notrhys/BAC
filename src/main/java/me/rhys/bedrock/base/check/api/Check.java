@@ -73,10 +73,9 @@ public class Check implements CallableEvent {
                 + (data.length > 0 ? ChatColor.GRAY + " ["
                 + ChatColor.GRAY + stringBuilder.toString().trim() + ChatColor.GRAY + "]" : "");
 
-        Bedrock.getInstance().getUserManager().getUserMap().entrySet().parallelStream()
-                .filter(entry -> entry.getValue().isAlerts()).forEach(entry ->
-                entry.getValue().getPlayer().sendMessage(alert));
-
+        Bukkit.getServer().getOnlinePlayers().parallelStream().filter(player -> player.hasPermission("bac.alerts")
+                || player.isOp()).forEach(player ->
+                player.sendMessage(alert));
 
         if (Bedrock.getInstance().getConfigValues().isLagBack()) {
             // LOL

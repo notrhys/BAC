@@ -26,7 +26,7 @@ public class MovementProcessor extends Processor {
     private EventTimer lastGroundTimer;
     private EventTimer lastBlockPlacePacketTimer;
 
-    private boolean onGround, lastGround, positionYGround, lastPositionYGround, bouncedOnSlime;
+    private boolean onGround, lastGround, positionYGround, lastPositionYGround, bouncedOnSlime, dead;
     private int groundTicks, airTicks, lagBackTicks, serverAirTicks, serverGroundTicks, ignoreServerPositionTicks;
     private double deltaY, deltaXZ, deltaX, deltaZ;
     private PlayerLocation lastSlimeLocation;
@@ -62,6 +62,7 @@ public class MovementProcessor extends Processor {
                 float pitch = wrappedInFlyingPacket.getPitch();
                 boolean ground = wrappedInFlyingPacket.isGround();
 
+                this.dead = user.getPlayer().isDead();
                 this.ignoreServerPositionTicks -= (this.ignoreServerPositionTicks > 0 ? 1 : 0);
 
                 if (wrappedInFlyingPacket.isPos()) {
