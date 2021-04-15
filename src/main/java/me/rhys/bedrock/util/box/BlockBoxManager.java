@@ -42,31 +42,6 @@ public class BlockBoxManager {
                 blockBox = new BlockBox1_9_R2();
                 break;
             }
-
-            case "1_10_R1": {
-                blockBox = new BlockBox1_10_R1();
-                break;
-            }
-
-            case "1_11_R1": {
-                blockBox = new BlockBox1_11_R1();
-                break;
-            }
-
-            case "1_12_R1": {
-                blockBox = new BlockBox1_12_R1();
-                break;
-            }
-
-            case "1_13_R1": {
-                blockBox = new BlockBox1_13_R1();
-                break;
-            }
-
-            case "1_13_R2": {
-                blockBox = new BlockBox1_13_R2();
-                break;
-            }
         }
     }
 }

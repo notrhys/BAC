@@ -17,7 +17,7 @@ public class KeepaliveHandler implements Runnable {
 
     public void start() {
         if (this.bukkitTask == null) {
-            this.bukkitTask = Bukkit.getScheduler().runTaskTimerAsynchronously(Bedrock.getInstance(),
+            this.bukkitTask = Bukkit.getScheduler().runTaskTimer(Bedrock.getInstance(),
                     this, 0L, 0L);
         }
     }

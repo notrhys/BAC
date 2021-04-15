@@ -16,6 +16,7 @@ import me.rhys.bedrock.util.PlayerLocation;
 import me.rhys.bedrock.util.block.BlockChecker;
 import me.rhys.bedrock.util.block.BlockEntry;
 import me.rhys.bedrock.util.box.BoundingBox;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -53,6 +54,7 @@ public class MovementProcessor extends Processor {
             case Packet.Client.LOOK:
             case Packet.Client.POSITION_LOOK:
             case Packet.Client.POSITION: {
+
                 WrappedInFlyingPacket wrappedInFlyingPacket = new WrappedInFlyingPacket(event.getPacket(),
                         this.user.getPlayer());
 

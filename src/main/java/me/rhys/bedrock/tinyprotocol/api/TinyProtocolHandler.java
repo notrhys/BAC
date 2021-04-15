@@ -40,6 +40,7 @@ public class TinyProtocolHandler {
     }
 
     public Object onPacketInAsync(Player sender, Object packet) {
+
         String name = packet.getClass().getName();
         int index = name.lastIndexOf(".");
         String packetName = name.substring(index + 1).replace("PacketPlayInUseItem",

@@ -32,7 +32,7 @@ public abstract class ChannelHandlerAbstract {
         addChannelHandlerExecutor = Executors.newSingleThreadExecutor();
         removeChannelHandlerExecutor = Executors.newSingleThreadExecutor();
         this.handlerKey = "packet_handler";
-        this.playerKey = "sparky_player_handler";
+        this.playerKey = "bac_player_handler";
     }
 
     public abstract void addChannel(Player player);

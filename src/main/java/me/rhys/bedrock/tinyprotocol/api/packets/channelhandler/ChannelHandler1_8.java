@@ -19,7 +19,6 @@ import me.rhys.bedrock.util.box.ReflectionUtil;
 import me.rhys.bedrock.Bedrock;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -29,7 +28,6 @@ public class ChannelHandler1_8 extends ChannelHandlerAbstract {
     private static final FieldAccessor<Object> getConnection = Reflection.getField("{nms}.EntityPlayer", "playerConnection", Object.class);
     private static final FieldAccessor<Object> getManager = Reflection.getField("{nms}.PlayerConnection", "networkManager", Object.class);
     private static final FieldAccessor<Channel> getChannel = Reflection.getField("{nms}.NetworkManager", Channel.class, 0);
-
 
     static final FieldAccessor<GameProfile> getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
     static final FieldAccessor<Integer> protocolId = Reflection.getField(PACKET_SET_PROTOCOL, int.class, 0);
@@ -41,13 +39,13 @@ public class ChannelHandler1_8 extends ChannelHandlerAbstract {
     public void addChannel(Player player) {
         Channel channel = getChannel(player);
         this.addChannelHandlerExecutor.execute(() -> {
-            if (channel != null) {
-                if (channel.pipeline().get(this.playerKey) != null) {
-                    channel.pipeline().remove(this.playerKey);
+                if (channel != null) {
+                    if (channel.pipeline().get(this.playerKey) != null) {
+                        channel.pipeline().remove(this.playerKey);
+                    }
+                    channel.pipeline().addBefore(this.handlerKey, this.playerKey, new ChannelHandler(player,
+                            this));
                 }
-                channel.pipeline().addBefore(this.handlerKey, this.playerKey, new ChannelHandler(player,
-                        this));
-            }
         });
     }
 
@@ -98,7 +96,9 @@ public class ChannelHandler1_8 extends ChannelHandlerAbstract {
 
         @Override
         public void channelRead(io.netty.channel.ChannelHandlerContext ctx, Object msg) throws Exception {
+
             Channel channel = ctx.channel();
+
             if (PACKET_LOGIN_IN_START.isInstance(msg)) {
                 GameProfile profile = getGameProfile.get(msg);
                 channelLookup.put(profile.getName(), channel);
@@ -108,6 +108,7 @@ public class ChannelHandler1_8 extends ChannelHandlerAbstract {
                     protocolLookup.put(channel, protocolId.get(msg));
                 }
             }
+
             Object packet = Bedrock.getInstance().getTinyProtocolHandler().onPacketInAsync(player, msg);
             if (packet != null) {
                 super.channelRead(ctx, packet);
@@ -115,33 +116,6 @@ public class ChannelHandler1_8 extends ChannelHandlerAbstract {
         }
     }
 
-
-    public int getProtocolVersion2(Player player) {
-        Channel channel = channelLookup.get(player.getName());
-
-        // Lookup channel again
-        if (channel == null) {
-            Object connection = getConnection.get(getPlayerHandle.invoke(player));
-            Object manager = getManager.get(connection);
-
-            channelLookup.put(player.getName(), channel = getChannel.get(manager));
-        }
-
-        Integer protocol = protocolLookup.get(channel);
-        if (protocol == null) {
-            int protocolVersion = 47;
-            try {
-                Class<?> Via = Class.forName("us.myles.ViaVersion.api.Via");
-                Class<?> clazzViaAPI = Class.forName("us.myles.ViaVersion.api.ViaAPI");
-                Object ViaAPI = Via.getMethod("getAPI").invoke(null);
-                Method getPlayerVersion = clazzViaAPI.getMethod("getPlayerVersion", Object.class);
-                protocolVersion = (int) getPlayerVersion.invoke(ViaAPI, player);
-            } catch (Throwable ignored) {
-            }
-            protocolLookup.put(channel, protocolVersion);
-            return protocolVersion;
-        } else return protocol;
-    }
 
 
     public void sendPacket(Player player, Object packet) {
