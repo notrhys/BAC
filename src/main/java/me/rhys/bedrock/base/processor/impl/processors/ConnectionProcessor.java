@@ -8,6 +8,7 @@ import me.rhys.bedrock.base.processor.api.ProcessorInformation;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
 import me.rhys.bedrock.tinyprotocol.packet.in.WrappedInKeepAlivePacket;
 import me.rhys.bedrock.util.EvictingMap;
+import org.bukkit.Bukkit;
 
 import java.util.Map;
 
@@ -30,6 +31,7 @@ public class ConnectionProcessor extends Processor {
                         .get(wrappedInKeepAlivePacket.getTime()));
                 this.sentKeepAlives.put(wrappedInKeepAlivePacket.getTime(), System.currentTimeMillis());
                 this.clientTick = (int) Math.ceil(this.ping / 50.0);
+                user.getCheckManager().getCheckList().forEach(check -> check.onConnection(user));
             }
         }
     }

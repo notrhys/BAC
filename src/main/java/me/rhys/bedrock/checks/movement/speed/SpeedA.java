@@ -53,7 +53,9 @@ public class SpeedA extends Check {
                 || user.getBlockData().fenceTicks > 0
                 || user.getBlockData().snowTicks > 0
                 || user.getBlockData().liquidTicks > 0
+                || user.getBlockData().underBlockTicks > 0
                 || user.getActionProcessor().getServerPositionTimer().hasNotPassed()
+                || user.getCombatProcessor().getPreVelocityTimer().hasNotPassed(5)
                 || user.getActionProcessor().getVelocityTimer().hasNotPassed();
     }
 }

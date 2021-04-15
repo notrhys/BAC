@@ -35,8 +35,10 @@ public class BlockChecker {
         Class<? extends MaterialData> blockData = block.getType().getData();
 
         if ((checkedBox.getMaximum().getY()) >= boundingBox.getMaximum().getY()
-                && checkedBox.collidesVertically(boundingBox
+                && (checkedBox.collidesVertically(boundingBox
                 .add(0, 0, 0, 0, 0.35f, 0))
+                || checkedBox.collidesVertically(boundingBox
+                .add(0, 0, 0, 0, 0.45f, 0)))
                 && block.getType() != Material.DOUBLE_PLANT) {
             this.underBlock = true;
         }

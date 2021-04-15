@@ -92,4 +92,9 @@ public class Check implements CallableEvent {
     public void setupTimers(User user) {
         //
     }
+
+    @Override
+    public void onConnection(User user) {
+        //
+    }
 }

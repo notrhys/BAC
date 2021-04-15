@@ -200,6 +200,7 @@ public class MovementProcessor extends Processor {
         }
 
         if (user.getBlockData().underBlock) {
+            user.getBlockData().blockAboveTimer.reset();
             user.getBlockData().underBlockTicks += (user.getBlockData().underBlockTicks < 20 ? 1 : 0);
         } else {
             user.getBlockData().underBlockTicks -= (user.getBlockData().underBlockTicks > 0 ? 1 : 0);

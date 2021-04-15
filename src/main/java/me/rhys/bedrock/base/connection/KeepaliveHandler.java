@@ -28,6 +28,10 @@ public class KeepaliveHandler implements Runnable {
             this.time = 999L;
         }
 
+        /*
+            Why use keepalives you say? transactions (COF) don't exist on the bedrock client
+            in fact keepalives are called ping packets in bedrock
+         */
         WrappedOutKeepAlivePacket wrappedOutKeepAlivePacket = new WrappedOutKeepAlivePacket(this.time);
         Bedrock.getInstance().getUserManager().getUserMap().forEach((uuid, user) -> {
             user.getConnectionMap().put(this.time, System.currentTimeMillis());

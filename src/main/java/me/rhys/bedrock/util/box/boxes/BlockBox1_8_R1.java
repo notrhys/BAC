@@ -44,7 +44,8 @@ public class BlockBox1_8_R1 implements BlockBox {
             org.bukkit.block.Block block = BlockUtil.getBlock(loc);
             if (block != null && !block.getType().equals(Material.AIR)) {
                 if (BlockUtil.collisionBoundingBoxes.containsKey(block.getType())) {
-                    BoundingBox box2 = BlockUtil.collisionBoundingBoxes.get(block.getType()).add(block.getLocation().toVector());
+                    BoundingBox box2 = BlockUtil.collisionBoundingBoxes.get(block.getType())
+                            .add(block.getLocation().toVector());
                     boxes.add(box2);
                 } else {
                     int x = block.getX(), y = block.getY(), z = block.getZ();
@@ -98,7 +99,8 @@ public class BlockBox1_8_R1 implements BlockBox {
 
     @Override
     public List<BoundingBox> getSpecificBox(Location loc) {
-        return Collections.synchronizedList(getCollidingBoxes(loc.getWorld(), new BoundingBox(loc.toVector(), loc.toVector())));
+        return Collections.synchronizedList(getCollidingBoxes(loc.getWorld(),
+                new BoundingBox(loc.toVector(), loc.toVector())));
     }
 
     @Override
@@ -125,7 +127,8 @@ public class BlockBox1_8_R1 implements BlockBox {
     @Override
     public int getTrackerId(Player player) {
         EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-        EntityTrackerEntry entry = (EntityTrackerEntry) ((WorldServer) entityPlayer.getWorld()).tracker.trackedEntities.get(entityPlayer.getId());
+        EntityTrackerEntry entry = (EntityTrackerEntry) ((WorldServer) entityPlayer.getWorld())
+                .tracker.trackedEntities.get(entityPlayer.getId());
         return entry.tracker.getId();
     }
 

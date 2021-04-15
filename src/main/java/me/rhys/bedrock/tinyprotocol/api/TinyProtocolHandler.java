@@ -10,7 +10,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class TinyProtocolHandler {
-    @Getter private static ChannelInjector instance;
+    @Getter
+    private static ChannelInjector instance;
 
     public TinyProtocolHandler() {
         new BlockUtil();
@@ -55,11 +56,11 @@ public class TinyProtocolHandler {
     }
 
     void fire(User user, String type, Object packet) {
-     //   user.getExecutorService().execute(() -> {
+        user.getExecutorService().execute(() -> {
             PacketEvent packetEvent = new PacketEvent(user, packet, type, System.currentTimeMillis());
             user.getEventManager().processProcessors(packetEvent);
             user.getEventManager().processChecks(packetEvent);
-       // });
+        });
     }
 }
 

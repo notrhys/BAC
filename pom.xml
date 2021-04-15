@@ -26,6 +26,7 @@
             <artifactId>FloodGate</artifactId>
             <version>1.0</version>
         </dependency>
+
         <dependency>
             <groupId>org.github.spigot</groupId>
             <artifactId>1.8.8</artifactId>
@@ -36,6 +37,30 @@
             <groupId>org.github.spigot</groupId>
             <artifactId>1.8</artifactId>
             <version>1.8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.github.spigot</groupId>
+            <artifactId>1.12.1</artifactId>
+            <version>1.12.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.github.spigot</groupId>
+            <artifactId>1.11.2</artifactId>
+            <version>1.11.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.github.spigot</groupId>
+            <artifactId>1.10.2</artifactId>
+            <version>1.10.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.github.spigot</groupId>
+            <artifactId>1.11.1</artifactId>
+            <version>1.11.1</version>
         </dependency>
 
         <dependency>
