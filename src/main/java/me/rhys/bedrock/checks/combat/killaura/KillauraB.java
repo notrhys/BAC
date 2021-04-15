@@ -27,13 +27,11 @@ public class KillauraB extends Check {
                     //why, just why.
                     if (delta == 0L) {
                         this.streak = 0;
-                    } else {
-                        if (this.streak++ > 20) {
-                            this.flag(user,
-                                    "streak: " + this.streak,
-                                    "time: " + delta
-                            );
-                        }
+                    } else if (this.streak++ > 20) {
+                        this.flag(user,
+                                "streak: " + this.streak,
+                                "time: " + delta
+                        );
                     }
                 } else if (user.getTick() % 30 == 0) {
                     this.streak -= (this.streak > 0 ? 1 : 0);
