@@ -43,7 +43,7 @@ public class Bedrock extends JavaPlugin {
         this.userManager = new UserManager();
         getServer().getPluginManager().registerEvents(new BukkitListener(), this);
         getServer().getOnlinePlayers().forEach(player -> TinyProtocolHandler.getInstance().addChannel(player));
-
+ 
         //Resets violations after 1 minute
         this.executorService.scheduleAtFixedRate(() -> this.getUserManager().getUserMap().forEach((uuid, user) ->
                 user.getCheckManager().getCheckList().forEach(check -> check.setViolation(0))),
