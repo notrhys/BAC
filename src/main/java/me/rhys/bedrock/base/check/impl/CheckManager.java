@@ -5,6 +5,7 @@ import me.rhys.bedrock.base.check.api.Check;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.checks.badpackets.BadPacketsA;
 import me.rhys.bedrock.checks.combat.killaura.KillauraA;
+import me.rhys.bedrock.checks.combat.killaura.KillauraB;
 import me.rhys.bedrock.checks.movement.flight.FlightA;
 import me.rhys.bedrock.checks.movement.flight.FlightB;
 import me.rhys.bedrock.checks.movement.flight.FlightC;
@@ -21,6 +22,7 @@ public class CheckManager {
 
     public void setupChecks(User user) {
         this.checkList.add(new KillauraA());
+        this.checkList.add(new KillauraB());
         this.checkList.add(new FlightA());
         this.checkList.add(new FlightB());
         this.checkList.add(new FlightC());

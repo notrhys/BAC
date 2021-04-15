@@ -64,7 +64,8 @@ public class SpeedB extends Check {
                                     max += .1922;
                                 }
 
-                                if (deltaXZ > max && (this.airThreshold += 1.1) > 2.94) {
+                                if (deltaXZ > max && (this.airThreshold += 1.1) > (user.getActionProcessor()
+                                        .getVelocityTimer().hasNotPassed(60) ? 3.4 : 2.94)) {
                                     this.flag(user,
                                             "tag: " + tag.name(),
                                             "speed: " + deltaXZ,

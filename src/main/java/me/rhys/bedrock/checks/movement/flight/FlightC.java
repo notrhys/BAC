@@ -56,6 +56,7 @@ public class FlightC extends Check {
         return user.getBlockData().slimeTicks > 0
                 || user.getBlockData().climbableTicks > 0
                 || user.shouldCancel()
-                || user.getBlockData().liquidTicks > 0;
+                || user.getBlockData().liquidTicks > 0
+                || user.getBlockData().webTicks > 0;
     }
 }
