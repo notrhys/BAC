@@ -6,7 +6,7 @@ import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
 
-@CheckInformation(checkName = "Speed")
+@CheckInformation(checkName = "Speed", description = "Basic friction check.")
 public class SpeedA extends Check {
 
     private double lastDeltaXZ;

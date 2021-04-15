@@ -1,6 +1,8 @@
 package me.rhys.bedrock;
 
 import lombok.Getter;
+import me.rhys.bedrock.config.ConfigLoader;
+import me.rhys.bedrock.config.ConfigValues;
 import me.rhys.bedrock.tinyprotocol.api.TinyProtocolHandler;
 import me.rhys.bedrock.util.BlockUtil;
 import me.rhys.bedrock.util.box.BlockBoxManager;
@@ -25,13 +27,15 @@ public class Bedrock extends JavaPlugin {
     private BoundingBoxes boundingBoxes;
     private BlockBoxManager blockBoxManager;
     public String bukkitVersion;
+    private final ConfigValues configValues = new ConfigValues();
+    private final ConfigLoader configLoader = new ConfigLoader();
 
     @Override
     public void onEnable() {
         instance = this;
 
+        this.configLoader.load();
         this.tinyProtocolHandler = new TinyProtocolHandler();
-        new BlockUtil();
         this.boundingBoxes = new BoundingBoxes();
         this.blockBoxManager = new BlockBoxManager();
         this.bukkitVersion = Bukkit.getServer().getClass().getPackage().getName().substring(23);

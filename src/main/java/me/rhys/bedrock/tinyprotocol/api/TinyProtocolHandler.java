@@ -5,16 +5,15 @@ import me.rhys.bedrock.Bedrock;
 import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.packets.ChannelInjector;
+import me.rhys.bedrock.util.BlockUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class TinyProtocolHandler {
-    @Getter
-    private static ChannelInjector instance;
-
-    public boolean paused = false;
+    @Getter private static ChannelInjector instance;
 
     public TinyProtocolHandler() {
+        new BlockUtil();
         instance = new ChannelInjector();
         Bukkit.getPluginManager().registerEvents(instance, Bedrock.getInstance());
     }
@@ -56,11 +55,11 @@ public class TinyProtocolHandler {
     }
 
     void fire(User user, String type, Object packet) {
-        user.getExecutorService().execute(() -> {
+     //   user.getExecutorService().execute(() -> {
             PacketEvent packetEvent = new PacketEvent(user, packet, type, System.currentTimeMillis());
             user.getEventManager().processProcessors(packetEvent);
             user.getEventManager().processChecks(packetEvent);
-        });
+       // });
     }
 }
 

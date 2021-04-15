@@ -27,16 +27,19 @@ public class MovementProcessor extends Processor {
     private EventTimer lastBlockPlacePacketTimer;
 
     private boolean onGround, lastGround, positionYGround, lastPositionYGround, bouncedOnSlime;
-    private int groundTicks, airTicks, lagBackTicks, serverAirTicks, serverGroundTicks;
+    private int groundTicks, airTicks, lagBackTicks, serverAirTicks, serverGroundTicks, ignoreServerPositionTicks;
     private double deltaY, deltaXZ, deltaX, deltaZ;
     private PlayerLocation lastSlimeLocation;
+
 
     @Override
     public void onPacket(PacketEvent event) {
         switch (event.getType()) {
 
             case Packet.Server.POSITION: {
-                user.getActionProcessor().add(ActionProcessor.Actions.SERVER_POSITION);
+                if (this.ignoreServerPositionTicks < 1) {
+                    user.getActionProcessor().add(ActionProcessor.Actions.SERVER_POSITION);
+                }
                 break;
             }
 
@@ -58,6 +61,8 @@ public class MovementProcessor extends Processor {
                 float yaw = wrappedInFlyingPacket.getYaw();
                 float pitch = wrappedInFlyingPacket.getPitch();
                 boolean ground = wrappedInFlyingPacket.isGround();
+
+                this.ignoreServerPositionTicks -= (this.ignoreServerPositionTicks > 0 ? 1 : 0);
 
                 if (wrappedInFlyingPacket.isPos()) {
                     this.deltaY = (user.getCurrentLocation().getY() - user.getLastLocation().getY());

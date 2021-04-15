@@ -18,9 +18,6 @@ public class Check implements CallableEvent {
     private boolean enabled, punished, lagBack, canPunish;
     private int violation, maxViolation;
 
-    private final String alertPrefix = ChatColor.DARK_GRAY + "[" + ChatColor.RED
-            + "Anticheat" + ChatColor.DARK_GRAY + "]";
-
     public void setup() {
         if (getClass().isAnnotationPresent(CheckInformation.class)) {
             CheckInformation checkInformation = getClass().getAnnotation(CheckInformation.class);
@@ -46,20 +43,30 @@ public class Check implements CallableEvent {
             }
         }
 
-        if (this.canPunish && this.violation > this.maxViolation) {
+        if (Bedrock.getInstance().getConfigValues().isPunish() && this.canPunish && this.violation > this.maxViolation) {
             this.violation = 0;
 
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    user.getPlayer().kickPlayer(alertPrefix + " " + ChatColor.RED + "Unfair advantage.");
-                    Bukkit.broadcastMessage(alertPrefix + " " + ChatColor.GRAY + "Removed " + ChatColor.RED
-                            + user.getPlayer().getName() + ChatColor.GRAY + " for having an unfair advantage.");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), Bedrock.getInstance().getConfigValues()
+                            .getPunishCommand().replace("%PLAYER%", user.getPlayer().getName())
+                            .replace("%CHECK%", checkName).replace("%TYPE%", checkType)
+                            .replace("%VL_LEVEL%", String.valueOf(violation))
+                            .replace("%PREFIX%", Bedrock.getInstance().getConfigValues().getPrefix())
+                            .replaceFirst("/", ""));
+
+                    if (Bedrock.getInstance().getConfigValues().isAnnounce()) {
+                        Bukkit.broadcastMessage(Bedrock.getInstance().getConfigValues().getAnnounceMessage()
+                                .replace("%PREFIX%", Bedrock.getInstance().getConfigValues().getPrefix())
+                                .replace("%PLAYER%", user.getPlayer().getName()));
+                    }
                 }
             }.runTask(Bedrock.getInstance());
         }
 
-        String alert = this.alertPrefix + " " + ChatColor.RED + user.getPlayer().getName() +
+        String alert = Bedrock.getInstance().getConfigValues().getPrefix()
+                + " " + ChatColor.RED + user.getPlayer().getName() +
                 ChatColor.GRAY + " Failed " + ChatColor.RED + this.checkName
                 + ChatColor.DARK_GRAY + " (" + ChatColor.RED + this.checkType + ChatColor.DARK_GRAY + ")"
                 + ChatColor.DARK_GRAY + " " + ChatColor.RED + "x" + (this.violation++)
@@ -71,8 +78,10 @@ public class Check implements CallableEvent {
                 entry.getValue().getPlayer().sendMessage(alert));
 
 
-        // LOL
-        user.getMovementProcessor().setLagBackTicks((this.lagBack ? 5 : 0));
+        if (Bedrock.getInstance().getConfigValues().isLagBack()) {
+            // LOL
+            user.getMovementProcessor().setLagBackTicks((this.lagBack ? 5 : 0));
+        }
     }
 
     @Override

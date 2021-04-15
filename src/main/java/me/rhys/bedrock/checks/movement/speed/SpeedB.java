@@ -7,7 +7,7 @@ import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
 import me.rhys.bedrock.util.EventTimer;
 
-@CheckInformation(checkName = "Speed", checkType = "B")
+@CheckInformation(checkName = "Speed", checkType = "B", description = "Basic limit check.")
 public class SpeedB extends Check {
 
     private EventTimer lastJumpTimer;
@@ -100,16 +100,13 @@ public class SpeedB extends Check {
                 || user.getBlockData().slimeTicks > 0
                 || user.getBlockData().slimeTimer.hasNotPassed()
                 || user.getBlockData().stairSlabTimer.hasNotPassed()
-                || user.getBlockData().liquidTicks > 0
+                || user.getBlockData().liquidTicks > 0 || user.getBlockData().climbableTicks > 0
                 || user.getTick() < 60;
     }
 
     void processDeltaY(User user) {
-        double deltaY = user.getMovementProcessor().getDeltaY();
-
-        //Doesn't make any sense, but ok bro
         if (!user.getMovementProcessor().isOnGround()
-                && user.getMovementProcessor().isLastGround() && deltaY < 0.009) {
+                && user.getMovementProcessor().isLastGround()) {
             this.lastJumpTimer.reset();
         }
     }

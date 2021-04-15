@@ -6,7 +6,8 @@ import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
 
-@CheckInformation(checkName = "Flight", checkType = "C", lagBack = false, canPunish = false)
+@CheckInformation(checkName = "Flight", checkType = "C", description = "Air time check",
+        lagBack = false, canPunish = false)
 public class FlightC extends Check {
 
     private int threshold;
