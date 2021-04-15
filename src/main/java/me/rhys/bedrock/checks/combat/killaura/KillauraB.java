@@ -24,6 +24,7 @@ public class KillauraB extends Check {
                 if ((System.currentTimeMillis() - this.lastAttack) < 1000L) {
                     long delta = (System.currentTimeMillis() - this.lastSwing);
 
+                    //why, just why.
                     if (delta == 0L) {
                         this.streak = 0;
                     } else {
