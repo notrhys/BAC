@@ -7,7 +7,8 @@ import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
 import org.bukkit.Bukkit;
 
-@CheckInformation(checkName = "KillAura", checkType = "B", description = "Checks if killaura breaks arm animations")
+@CheckInformation(checkName = "KillAura", checkType = "B",
+        description = "Checks for flaws in the arm animation packet, flags a few killauras")
 public class KillauraB extends Check {
 
     private long lastSwing, lastAttack;
