@@ -2,11 +2,13 @@ package me.rhys.bedrock.util;
 
 import me.rhys.bedrock.tinyprotocol.api.ProtocolVersion;
 import me.rhys.bedrock.util.box.BoundingBox;
+import net.minecraft.server.v1_16_R3.World;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BlockUtil {
@@ -27,6 +29,10 @@ public class BlockUtil {
         } else {
             return null;
         }
+    }
+
+    public static Block getBlockNoChunk(Location location) {
+        return location.getBlock();
     }
 
     public static boolean isStair(Block block) {

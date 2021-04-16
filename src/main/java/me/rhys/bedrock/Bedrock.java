@@ -1,15 +1,12 @@
 package me.rhys.bedrock;
 
 import lombok.Getter;
-import me.rhys.bedrock.config.ConfigLoader;
-import me.rhys.bedrock.config.ConfigValues;
-import me.rhys.bedrock.tinyprotocol.api.TinyProtocolHandler;
-import me.rhys.bedrock.util.BlockUtil;
-import me.rhys.bedrock.util.box.BlockBoxManager;
 import me.rhys.bedrock.base.connection.KeepaliveHandler;
 import me.rhys.bedrock.base.listener.BukkitListener;
 import me.rhys.bedrock.base.user.UserManager;
-import me.rhys.bedrock.util.box.impl.BoundingBoxes;
+import me.rhys.bedrock.config.ConfigLoader;
+import me.rhys.bedrock.config.ConfigValues;
+import me.rhys.bedrock.tinyprotocol.api.TinyProtocolHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.geysermc.floodgate.FloodgateAPI;
@@ -25,8 +22,6 @@ public class Bedrock extends JavaPlugin {
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
     private KeepaliveHandler keepaliveHandler;
     private TinyProtocolHandler tinyProtocolHandler;
-    private BoundingBoxes boundingBoxes;
-    private BlockBoxManager blockBoxManager;
     public String bukkitVersion;
     private final ConfigValues configValues = new ConfigValues();
     private final ConfigLoader configLoader = new ConfigLoader();
@@ -37,8 +32,6 @@ public class Bedrock extends JavaPlugin {
 
         this.configLoader.load();
         this.tinyProtocolHandler = new TinyProtocolHandler();
-        this.boundingBoxes = new BoundingBoxes();
-        this.blockBoxManager = new BlockBoxManager();
         this.bukkitVersion = Bukkit.getServer().getClass().getPackage().getName().substring(23);
         this.keepaliveHandler = new KeepaliveHandler();
         this.userManager = new UserManager();

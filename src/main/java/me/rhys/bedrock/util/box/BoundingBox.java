@@ -4,8 +4,10 @@ import me.rhys.bedrock.Bedrock;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.util.BlockUtil;
 import me.rhys.bedrock.util.MathUtil;
+import me.rhys.bedrock.util.block.CollideEntry;
 import net.minecraft.server.v1_8_R3.BlockPosition;
 import net.minecraft.server.v1_8_R3.IBlockData;
+import org.bukkit.ChunkSnapshot;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -78,6 +80,16 @@ public class BoundingBox {
         return this;
     }
 
+    public BoundingBox addXYZ(double x, double y, double z) {
+        this.minX += x;
+        this.minY += y;
+        this.minZ += z;
+        this.maxX += x;
+        this.maxY += y;
+        this.maxZ += z;
+        return this;
+    }
+
     public BoundingBox grow(float x, float y, float z) {
         float newMinX = minX - x;
         float newMaxX = maxX + x;
@@ -112,8 +124,8 @@ public class BoundingBox {
         return (vector.getX() > this.minX && vector.getX() < this.maxX) && ((vector.getY() > this.minY && vector.getY() < this.maxY) && (vector.getZ() > this.minZ && vector.getZ() < this.maxZ));
     }
 
-    public List<BoundingBox> getCollidingBlockBoxes(Player player, User user) {
-        List<BoundingBox> toReturn = new ArrayList<>();
+    public List<CollideEntry> getCollidedBlocks(Player player) {
+        List<CollideEntry> toReturn = new ArrayList<>();
         int minX = MathUtil.floor(this.minX);
         int maxX = MathUtil.floor(this.maxX + 1);
         int minY = MathUtil.floor(this.minY);
@@ -121,22 +133,15 @@ public class BoundingBox {
         int minZ = MathUtil.floor(this.minZ);
         int maxZ = MathUtil.floor(this.maxZ + 1);
 
-
         for (int x = minX; x < maxX; x++) {
             for (int z = minZ; z < maxZ; z++) {
                 for (int y = minY - 1; y < maxY; y++) {
-                    Location loc = new Location(player.getWorld(), x, y, z);
-
-                    if (BlockUtil.isChunkLoaded(loc)) {
-                        Block block = BlockUtil.getBlock(loc);
-
-                        if (!block.getType().equals(Material.AIR)) {
-                            toReturn.addAll(Bedrock.getInstance().getBoundingBoxes().getBoundingBox(block));
-                        }
-                    }
+                    toReturn.add(new CollideEntry(BlockUtil.getBlock(new Location(player.getWorld(), x, y, z)),
+                            this));
                 }
             }
         }
+
         return toReturn;
     }
 
@@ -146,13 +151,6 @@ public class BoundingBox {
 
     public Vector getMaximum() {
         return new Vector(maxX, maxY, maxZ);
-    }
-
-    public List<Block> getCollidingBlocks(Player player, User user) {
-        List<Block> toReturn = new ArrayList<>();
-
-        getCollidingBlockBoxes(player, user).forEach(bb -> bb.getMinimum().toLocation(player.getWorld()).getBlock());
-        return toReturn;
     }
 
     public List<Block> getAllBlocks(Player player) {
@@ -173,10 +171,6 @@ public class BoundingBox {
             }
         }
         return all;
-    }
-
-    public boolean inBlock(Player player, User user) {
-        return getCollidingBlocks(player, user).size() > 0;
     }
 
     public boolean intersectsWithBox(Object other) {

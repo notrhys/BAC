@@ -1,6 +1,7 @@
 package me.rhys.bedrock.util.box;
 
 import me.rhys.bedrock.Bedrock;
+import me.rhys.bedrock.tinyprotocol.api.ProtocolVersion;
 import me.rhys.bedrock.util.BlockUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -159,14 +160,14 @@ public class ReflectionUtil {
                 Object data = getMethodValue(getMethod(world.getClass(), "getType", blockPosition), world, bPos);
                 Object blockNMS = getMethodValue(getMethod(getNMSClass("IBlockData"), "getBlock"), data);
 
-                if (Bedrock.getInstance().getBukkitVersion().contains("1_13")) {
+                if (ProtocolVersion.getGameVersion().isBelow(ProtocolVersion.V1_13)) {
                     if (!isNewVersion()) {
 
                         if (getMethodValueNoST(getMethodNoST(blockNMS.getClass(), "a", World, blockPosition, iBlockData), blockNMS, world, bPos, data) != null
                                 && !BlockUtil.isSlab(block)) {
                             BoundingBox box = toBoundingBox(getMethodValue(getMethod(blockNMS.getClass(), "a", World, blockPosition, iBlockData), blockNMS, world, bPos, data));
 
-                            if (Bedrock.getInstance().getBukkitVersion().contains("1_13")) {
+                            if (ProtocolVersion.getGameVersion().isBelow(ProtocolVersion.V1_13)) {
                                 if (block.getType().toString().contains("STEP") && !block.getType().toString().contains("WOOD")) {
                                     Step slab = (Step) block.getType().getNewData(block.getData());
 
@@ -193,7 +194,7 @@ public class ReflectionUtil {
                         } else if (getMethodValueNoST(getMethodNoST(vanillaBlock, "a", World, blockPosition, iBlockData), blockNMS, world, bPos, data) != null) {
                             BoundingBox box = toBoundingBox(getMethodValue(getMethod(vanillaBlock, "a", World, blockPosition, iBlockData), blockNMS, world, bPos, data));
 
-                            if (Bedrock.getInstance().getBukkitVersion().contains("1_13")) {
+                            if (ProtocolVersion.getGameVersion().isBelow(ProtocolVersion.V1_13)) {
                                 if (block.getType().toString().contains("STEP") && !block.getType().toString().contains("WOOD")) {
                                     Step slab = (Step) block.getType().getNewData(block.getData());
 

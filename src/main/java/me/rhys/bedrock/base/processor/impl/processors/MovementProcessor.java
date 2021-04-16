@@ -2,24 +2,17 @@ package me.rhys.bedrock.base.processor.impl.processors;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.rhys.bedrock.Bedrock;
 import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.processor.api.Processor;
 import me.rhys.bedrock.base.processor.api.ProcessorInformation;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
 import me.rhys.bedrock.tinyprotocol.packet.in.WrappedInFlyingPacket;
-import me.rhys.bedrock.util.BlockUtil;
 import me.rhys.bedrock.util.EventTimer;
 import me.rhys.bedrock.util.MathUtil;
 import me.rhys.bedrock.util.PlayerLocation;
 import me.rhys.bedrock.util.block.BlockChecker;
-import me.rhys.bedrock.util.block.BlockEntry;
 import me.rhys.bedrock.util.box.BoundingBox;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 @ProcessorInformation(name = "Movement")
@@ -117,41 +110,12 @@ public class MovementProcessor extends Processor {
         user.setBoundingBox(new BoundingBox((badVector ? user.getCurrentLocation().toVector()
                 : user.getLastLocation().toVector()), user.getCurrentLocation().toVector())
                 .grow(0.3f, 0, 0.3f).add(0, 0, 0, 0, 1.84f, 0));
-
-        World world = user.getPlayer().getWorld();
-        BlockChecker blockChecker = new BlockChecker(this.user);
-
-        boolean ladderOrSomething = false;
-        if (user.getPlayer().getLocation() != null && user.getPlayer().getWorld() != null) {
-            Block bukkitBlock = BlockUtil.getBlock(user.getPlayer().getLocation());
-
-            if (bukkitBlock != null) {
-                Material material = bukkitBlock.getType();
-
-                if (material != null) {
-                    ladderOrSomething = ((material == Material.LADDER || material == Material.VINE));
-                }
-            }
-        }
-
-        float offset = ((ladderOrSomething || user.getBlockData().climbableTicks > 0
-                || (user.getCurrentLocation().getY()
-                - user.getLastLocation().getY()) < -1.00f ? 0.8f : 0.3f));
-
-        Bedrock.getInstance().getBlockBoxManager().getBlockBox()
-                .getCollidingBoxes(world, user.getBoundingBox()
-                        .grow(offset, 0.3f, offset)).parallelStream().forEach(boundingBox -> {
-            Block block = BlockUtil.getBlock(boundingBox.getMinimum().toLocation(world));
-
-            if (block != null) {
-                blockChecker.check(new BlockEntry(block, boundingBox));
-            }
-        });
-
-        this.cacheInformation(blockChecker);
+        this.cacheInformation(new BlockChecker(this.user));
     }
 
     void cacheInformation(BlockChecker blockChecker) {
+        blockChecker.processBlocks();
+
         user.getBlockData().lastOnGround = user.getBlockData().onGround;
         user.getBlockData().onGround = blockChecker.isOnGround();
         user.getBlockData().nearLiquid = blockChecker.isNearLiquid();
