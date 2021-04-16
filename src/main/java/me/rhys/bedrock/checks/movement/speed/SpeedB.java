@@ -5,6 +5,7 @@ import me.rhys.bedrock.base.check.api.CheckInformation;
 import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
+import me.rhys.bedrock.util.BlockUtil;
 import me.rhys.bedrock.util.EventTimer;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -126,16 +127,18 @@ public class SpeedB extends Check {
     }
 
     void processLevelChange(User user) {
-        Location location = user.getCurrentLocation().toBukkitLocation(user.getPlayer().getWorld());
-        if (location.clone().add(0, -1, 0).getBlock().getType() != Material.AIR) {
-            int blockY = location.getBlockY();
+        if (user.getCurrentLocation() != null && user.getTick() > 60) {
+            Location location = user.getCurrentLocation().toBukkitLocation(user.getPlayer().getWorld());
+            if (BlockUtil.getBlock(location.clone().add(0, -1, 0)).getType() != Material.AIR) {
+                int blockY = location.getBlockY();
 
-            if (Math.abs(this.lastLevelY - blockY) > 0) {
-                this.blockLevelChangeTimer.reset();
-            }
+                if (Math.abs(this.lastLevelY - blockY) > 0) {
+                    this.blockLevelChangeTimer.reset();
+                }
 
-            if (user.getBlockData().onGround) {
-                this.lastLevelY = blockY;
+                if (user.getBlockData().onGround) {
+                    this.lastLevelY = blockY;
+                }
             }
         }
     }

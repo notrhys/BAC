@@ -2,7 +2,9 @@ package me.rhys.bedrock.base.connection;
 
 import lombok.Getter;
 import me.rhys.bedrock.Bedrock;
+import me.rhys.bedrock.tinyprotocol.api.ProtocolVersion;
 import me.rhys.bedrock.tinyprotocol.packet.out.WrappedOutKeepAlivePacket;
+import me.rhys.bedrock.tinyprotocol.packet.out.WrappedOutTransaction;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -28,14 +30,29 @@ public class KeepaliveHandler implements Runnable {
             this.time = 999L;
         }
 
-        /*
-            Why use keepalives you say? transactions (COF) don't exist on the bedrock client
-            in fact keepalives are called ping packets in bedrock
-         */
+        if (ProtocolVersion.getGameVersion().isAbove(ProtocolVersion.V1_9_4)) {
+            //Fix for 1.9+ servers, because keepalives are broken for some reason...?
+            this.processTransaction();
+        } else {
+            this.processKeepAlive();
+        }
+    }
+
+    void processKeepAlive() {
         WrappedOutKeepAlivePacket wrappedOutKeepAlivePacket = new WrappedOutKeepAlivePacket(this.time);
         Bedrock.getInstance().getUserManager().getUserMap().forEach((uuid, user) -> {
             user.getConnectionMap().put(this.time, System.currentTimeMillis());
-        //    user.sendPacket(wrappedOutKeepAlivePacket.getObject());
+            user.sendPacket(wrappedOutKeepAlivePacket.getObject());
+        });
+    }
+
+    void processTransaction() {
+        WrappedOutTransaction wrappedOutTransaction = new WrappedOutTransaction(0, (short) this.time,
+                false);
+
+        Bedrock.getInstance().getUserManager().getUserMap().forEach((uuid, user) -> {
+            user.getConnectionMap().put(this.time, System.currentTimeMillis());
+            user.sendPacket(wrappedOutTransaction.getObject());
         });
     }
 }
