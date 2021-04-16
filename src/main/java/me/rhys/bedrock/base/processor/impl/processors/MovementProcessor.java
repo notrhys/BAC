@@ -121,7 +121,7 @@ public class MovementProcessor extends Processor {
         World world = user.getPlayer().getWorld();
         BlockChecker blockChecker = new BlockChecker(this.user);
 
-        boolean climable = false;
+        boolean ladderOrSomething = false;
         if (user.getPlayer().getLocation() != null && user.getPlayer().getWorld() != null) {
             Block bukkitBlock = BlockUtil.getBlock(user.getPlayer().getLocation());
 
@@ -129,12 +129,12 @@ public class MovementProcessor extends Processor {
                 Material material = bukkitBlock.getType();
 
                 if (material != null) {
-                    climable = ((material == Material.LADDER || material == Material.VINE));
+                    ladderOrSomething = ((material == Material.LADDER || material == Material.VINE));
                 }
             }
         }
 
-        float offset = ((climable || user.getBlockData().climbableTicks > 0
+        float offset = ((ladderOrSomething || user.getBlockData().climbableTicks > 0
                 || (user.getCurrentLocation().getY()
                 - user.getLastLocation().getY()) < -1.00f ? 0.8f : 0.3f));
 
