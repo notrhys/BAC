@@ -134,7 +134,7 @@ public class MovementProcessor extends Processor {
             }
         }
 
-        float offset = ((climable || user.getBlockData().iceTicks > 0
+        float offset = ((climable || user.getBlockData().climbableTicks > 0
                 || (user.getCurrentLocation().getY()
                 - user.getLastLocation().getY()) < -1.00f ? 0.8f : 0.3f));
 
