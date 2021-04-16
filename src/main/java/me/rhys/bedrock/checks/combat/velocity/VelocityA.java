@@ -17,7 +17,6 @@ import java.util.List;
 public class VelocityA extends Check {
 
     private final List<VelocityEntry> velocityEntries = new EvictingList<>(20);
-    private EventTimer lastConnectionTimer;
     private double threshold;
 
     @Override
@@ -84,15 +83,6 @@ public class VelocityA extends Check {
         }
     }
 
-    @Override
-    public void onConnection(User user) {
-        this.lastConnectionTimer.reset();
-    }
-
-    @Override
-    public void setupTimers(User user) {
-        this.lastConnectionTimer = new EventTimer(20, user);
-    }
 
     @Getter @AllArgsConstructor
     public static class VelocityEntry {
