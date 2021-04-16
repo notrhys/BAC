@@ -125,6 +125,8 @@ public class BoundingBox {
     }
 
     public List<CollideEntry> getCollidedBlocks(Player player) {
+      //  player.sendMessage("" + player.getLocation().getBlock().getType().name());
+
         List<CollideEntry> toReturn = new ArrayList<>();
         int minX = MathUtil.floor(this.minX);
         int maxX = MathUtil.floor(this.maxX + 1);
@@ -133,9 +135,9 @@ public class BoundingBox {
         int minZ = MathUtil.floor(this.minZ);
         int maxZ = MathUtil.floor(this.maxZ + 1);
 
-        for (int x = minX; x < maxX; x++) {
-            for (int z = minZ; z < maxZ; z++) {
-                for (int y = minY - 1; y < maxY; y++) {
+        for (double x = minX; x < maxX; x++) {
+            for (double z = minZ; z < maxZ; z++) {
+                for (double y = minY - 1; y < maxY; y++) {
                     toReturn.add(new CollideEntry(BlockUtil.getBlock(new Location(player.getWorld(), x, y, z)),
                             this));
                 }

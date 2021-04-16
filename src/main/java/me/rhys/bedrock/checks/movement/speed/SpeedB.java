@@ -45,14 +45,16 @@ public class SpeedB extends Check {
                                     || this.blockLevelChangeTimer.hasNotPassed();
 
                             //Not the best but will do the job for now.
-                            double max = (expand ? .6325 : .2925);
+                            double max = (expand ? .6325 : .3095);
 
                             if (user.getPotionProcessor().getSpeedTicks() > 0) {
                                 max += (user.getPotionProcessor().getSpeedAmplifier() * 0.060);
+                            } else if (user.getElytraProcessor().isUsingElytra()) {
+                                max += user.getElytraProcessor().getFireworkBoost();
                             }
 
                             if (deltaXZ > max) {
-                                if ((this.groundThreshold += 1.2) > 4) {
+                                if ((this.groundThreshold += 1.2) > 5.5) {
                                     this.flag(user,
                                             "tag: " + tag.name(),
                                             "speed: " + deltaXZ,
@@ -62,7 +64,7 @@ public class SpeedB extends Check {
                                     );
                                 }
                             } else {
-                                this.groundThreshold -= (this.groundThreshold > 0 ? .8 : 0);
+                                this.groundThreshold -= (this.groundThreshold > 0 ? 1 : 0);
                             }
                             break;
                         }
@@ -76,6 +78,8 @@ public class SpeedB extends Check {
                                     max += .1922;
                                 } else if (this.blockLevelChangeTimer.hasNotPassed()) {
                                     max += .2;
+                                } else if (user.getElytraProcessor().isUsingElytra()) {
+                                    max += user.getElytraProcessor().getFireworkBoost();
                                 }
 
                                 if (deltaXZ > max && (this.airThreshold += 1.1) > (user.getActionProcessor()

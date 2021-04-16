@@ -34,6 +34,7 @@ public class User {
     private ActionProcessor actionProcessor;
     private PotionProcessor potionProcessor;
     private CombatProcessor combatProcessor;
+    private ElytraProcessor elytraProcessor;
 
     private final Map<Long, Long> connectionMap = new EvictingMap<>(100);
     private int tick;
@@ -61,6 +62,7 @@ public class User {
         this.actionProcessor = (ActionProcessor) this.processorManager.forClass(ActionProcessor.class);
         this.potionProcessor = (PotionProcessor) this.processorManager.forClass(PotionProcessor.class);
         this.combatProcessor = (CombatProcessor) this.processorManager.forClass(CombatProcessor.class);
+        this.elytraProcessor = (ElytraProcessor) this.processorManager.forClass(ElytraProcessor.class);
     }
 
     public void sendPacket(Object packet) {

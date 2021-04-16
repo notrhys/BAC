@@ -3,8 +3,10 @@ package me.rhys.bedrock.util.block;
 import lombok.Getter;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.util.BlockUtil;
+import me.rhys.bedrock.util.MaterialHelper;
 import me.rhys.bedrock.util.box.BoundingBox;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.material.MaterialData;
 import org.bukkit.material.Step;
 import org.bukkit.material.WoodenStep;
@@ -22,9 +24,10 @@ public class BlockChecker {
     }
 
     private boolean onGround, nearLiquid, nearIce, climbable, slime, piston, snow, fence, bed,
-            stair, slab, movingUp, underBlock, web;
+            stair, slab, movingUp, underBlock, web, shulker;
 
     public void processBlocks() {
+
         List<CollideEntry> collidedBlocks = this.boundingBox.getCollidedBlocks(this.user.getPlayer());
 
         this.underBlock = new BoundingBox(
@@ -46,7 +49,9 @@ public class BlockChecker {
                 this.onGround = true;
             }
 
-            switch (collideEntry.getBlock().getType()) {
+            Block block = collideEntry.getBlock();
+
+            switch (block.getType()) {
                 case WATER:
                 case STATIONARY_WATER:
                 case STATIONARY_LAVA:
@@ -134,6 +139,13 @@ public class BlockChecker {
                 this.movingUp = delta > 0 && Math.abs(user.getMovementProcessor().getDeltaY()) > 0 && this.onGround;
                 user.getBlockData().lastBlockY = boxY;
             }
+
+            this.processOtherBlocks(block);
         });
+    }
+
+    //For 1.9+ blocks etc..
+    void processOtherBlocks(Block block) {
+        this.shulker = MaterialHelper.isShulker(block);
     }
 }

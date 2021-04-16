@@ -6,6 +6,7 @@ import me.rhys.bedrock.base.listener.BukkitListener;
 import me.rhys.bedrock.base.user.UserManager;
 import me.rhys.bedrock.config.ConfigLoader;
 import me.rhys.bedrock.config.ConfigValues;
+import me.rhys.bedrock.tinyprotocol.api.ProtocolVersion;
 import me.rhys.bedrock.tinyprotocol.api.TinyProtocolHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,9 +30,15 @@ public class Bedrock extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        this.tinyProtocolHandler = new TinyProtocolHandler();
+
+        if (ProtocolVersion.getGameVersion().isAbove(ProtocolVersion.V1_12_2)) {
+            getServer().getPluginManager().disablePlugin(this);
+            getLogger().warning("BAC is only compatible with 1.8.* to 1.12.2 spigot's");
+            return;
+        }
 
         this.configLoader.load();
-        this.tinyProtocolHandler = new TinyProtocolHandler();
         this.bukkitVersion = Bukkit.getServer().getClass().getPackage().getName().substring(23);
         this.keepaliveHandler = new KeepaliveHandler();
         this.userManager = new UserManager();

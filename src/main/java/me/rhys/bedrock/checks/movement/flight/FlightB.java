@@ -56,6 +56,7 @@ public class FlightB extends Check {
                 || user.getMovementProcessor().getLastBlockPlacePacketTimer().hasNotPassed()
                 || user.getBlockData().climbableTicks > 0
                 || user.getBlockData().bedTicks > 0
-                || user.getMovementProcessor().isDead();
+                || user.getMovementProcessor().isDead()
+                || user.getElytraProcessor().isUsingElytra();
     }
 }

@@ -27,7 +27,7 @@ public class KillauraB extends Check {
                     //why, just why.
                     if (delta == 0L) {
                         this.streak = 0;
-                    } else if (this.streak++ > 20) {
+                    } else if (this.streak++ > 50) {
                         this.flag(user,
                                 "streak: " + this.streak,
                                 "time: " + delta

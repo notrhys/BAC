@@ -57,6 +57,7 @@ public class FlightC extends Check {
                 || user.getBlockData().climbableTicks > 0
                 || user.shouldCancel()
                 || user.getBlockData().liquidTicks > 0
-                || user.getBlockData().webTicks > 0;
+                || user.getBlockData().webTicks > 0
+                || user.getElytraProcessor().isUsingElytra();
     }
 }

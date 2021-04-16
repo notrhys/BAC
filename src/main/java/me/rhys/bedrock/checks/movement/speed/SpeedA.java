@@ -56,6 +56,8 @@ public class SpeedA extends Check {
                 || user.getBlockData().underBlockTicks > 0
                 || user.getActionProcessor().getServerPositionTimer().hasNotPassed()
                 || user.getCombatProcessor().getPreVelocityTimer().hasNotPassed(5)
-                || user.getActionProcessor().getVelocityTimer().hasNotPassed();
+                || user.getActionProcessor().getVelocityTimer().hasNotPassed()
+                || user.getElytraProcessor().isUsingElytra()
+                || user.getElytraProcessor().getLastElytraTick().hasNotPassed();
     }
 }

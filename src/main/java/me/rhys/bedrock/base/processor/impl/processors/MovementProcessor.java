@@ -2,30 +2,34 @@ package me.rhys.bedrock.base.processor.impl.processors;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.rhys.bedrock.Bedrock;
 import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.processor.api.Processor;
 import me.rhys.bedrock.base.processor.api.ProcessorInformation;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
+import me.rhys.bedrock.tinyprotocol.api.ProtocolVersion;
+import me.rhys.bedrock.tinyprotocol.packet.in.WrappedInEntityActionPacket;
 import me.rhys.bedrock.tinyprotocol.packet.in.WrappedInFlyingPacket;
 import me.rhys.bedrock.util.EventTimer;
+import me.rhys.bedrock.util.MaterialHelper;
 import me.rhys.bedrock.util.MathUtil;
 import me.rhys.bedrock.util.PlayerLocation;
 import me.rhys.bedrock.util.block.BlockChecker;
 import me.rhys.bedrock.util.box.BoundingBox;
+import org.bukkit.Location;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 @ProcessorInformation(name = "Movement")
 @Getter @Setter
 public class MovementProcessor extends Processor {
-    private EventTimer lastGroundTimer;
-    private EventTimer lastBlockPlacePacketTimer;
+    private EventTimer lastGroundTimer, lastBlockPlacePacketTimer;
 
     private boolean onGround, lastGround, positionYGround, lastPositionYGround, bouncedOnSlime, dead;
     private int groundTicks, airTicks, lagBackTicks, serverAirTicks, serverGroundTicks, ignoreServerPositionTicks;
-    private double deltaY, deltaXZ, deltaX, deltaZ;
+    private double deltaY, lastDeltaY, deltaXZ, lastDeltaXZ, deltaX, deltaZ;
     private PlayerLocation lastSlimeLocation;
-
 
     @Override
     public void onPacket(PacketEvent event) {
@@ -47,7 +51,6 @@ public class MovementProcessor extends Processor {
             case Packet.Client.LOOK:
             case Packet.Client.POSITION_LOOK:
             case Packet.Client.POSITION: {
-
                 WrappedInFlyingPacket wrappedInFlyingPacket = new WrappedInFlyingPacket(event.getPacket(),
                         this.user.getPlayer());
 
@@ -62,6 +65,7 @@ public class MovementProcessor extends Processor {
                 this.ignoreServerPositionTicks -= (this.ignoreServerPositionTicks > 0 ? 1 : 0);
 
                 if (wrappedInFlyingPacket.isPos()) {
+                    this.lastDeltaY = this.deltaY;
                     this.deltaY = (user.getCurrentLocation().getY() - user.getLastLocation().getY());
 
                     user.setLastLocation(user.getCurrentLocation());
@@ -88,20 +92,34 @@ public class MovementProcessor extends Processor {
                         - Math.abs(user.getLastLocation().getX()));
                 this.deltaZ = Math.abs(Math.abs(user.getCurrentLocation().getZ())
                         - Math.abs(user.getLastLocation().getZ()));
+
+                this.lastDeltaXZ = this.deltaXZ;
                 this.deltaXZ = Math.hypot(this.deltaX, this.deltaZ);
 
                 this.processBlocks();
                 this.user.setTick(this.user.getTick() + 1);
 
                 if (this.lagBackTicks-- > 0 && user.getTick() % 5 == 0) {
-                    user.getPlayer().teleport(MathUtil.getGroundLocation(user),
-                            PlayerTeleportEvent.TeleportCause.PLUGIN);
+                    Location groundLocation = MathUtil.getGroundLocation(user);
+
+                    //Have to teleport off main thread because spigot retarded
+                    if (ProtocolVersion.getGameVersion().isAbove(ProtocolVersion.V1_9_4)) {
+                        new BukkitRunnable() {
+                            @Override
+                            public void run() {
+                                user.getPlayer().teleport(groundLocation,
+                                        PlayerTeleportEvent.TeleportCause.PLUGIN);
+                            }
+                        }.runTask(Bedrock.getInstance());
+                    } else {
+                        user.getPlayer().teleport(groundLocation,
+                                PlayerTeleportEvent.TeleportCause.PLUGIN);
+                    }
                 }
                 break;
             }
         }
     }
-
 
     void processBlocks() {
         boolean badVector = Math.abs(user.getCurrentLocation().toVector().length()
@@ -130,6 +148,7 @@ public class MovementProcessor extends Processor {
         user.getBlockData().slab = blockChecker.isSlab();
         user.getBlockData().underBlock = blockChecker.isUnderBlock();
         user.getBlockData().web = blockChecker.isWeb();
+        user.getBlockData().shulker = blockChecker.isShulker();
 
         if (user.getBlockData().onGround) {
             if (this.serverGroundTicks < 20) this.serverGroundTicks++;
@@ -158,6 +177,12 @@ public class MovementProcessor extends Processor {
     }
 
     void updateTicks() {
+
+        if (user.getBlockData().shulker) {
+            user.getBlockData().shulkerTicks += (user.getBlockData().shulkerTicks < 20 ? 1 : 0);
+        } else {
+            user.getBlockData().shulkerTicks -= (user.getBlockData().shulkerTicks > 0 ? 1 : 0);
+        }
 
         if (user.getBlockData().web) {
             user.getBlockData().webTicks += (user.getBlockData().webTicks < 20 ? 1 : 0);

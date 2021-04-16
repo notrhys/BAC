@@ -23,6 +23,7 @@ public class ProcessorManager {
         this.processors.add(new CombatProcessor());
         this.processors.add(new ActionProcessor());
         this.processors.add(new PotionProcessor());
+        this.processors.add(new ElytraProcessor());
 
         this.processors.forEach(processor -> processor.setup(this.user));
     }
