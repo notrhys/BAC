@@ -12,6 +12,7 @@ import me.rhys.bedrock.base.user.UserManager;
 import me.rhys.bedrock.util.box.impl.BoundingBoxes;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.geysermc.floodgate.FloodgateAPI;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -42,8 +43,9 @@ public class Bedrock extends JavaPlugin {
         this.keepaliveHandler = new KeepaliveHandler();
         this.userManager = new UserManager();
         getServer().getPluginManager().registerEvents(new BukkitListener(), this);
-        getServer().getOnlinePlayers().forEach(player -> TinyProtocolHandler.getInstance().addChannel(player));
- 
+        getServer().getOnlinePlayers().stream().filter(FloodgateAPI::isBedrockPlayer)
+                .forEach(player -> TinyProtocolHandler.getInstance().addChannel(player));
+
         //Resets violations after 1 minute
         this.executorService.scheduleAtFixedRate(() -> this.getUserManager().getUserMap().forEach((uuid, user) ->
                 user.getCheckManager().getCheckList().forEach(check -> check.setViolation(0))),
