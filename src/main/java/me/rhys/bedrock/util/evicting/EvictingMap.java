@@ -1,4 +1,4 @@
-package me.rhys.bedrock.util;
+package me.rhys.bedrock.util.evicting;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

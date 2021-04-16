@@ -8,7 +8,7 @@ import me.rhys.bedrock.base.processor.impl.ProcessorManager;
 import me.rhys.bedrock.base.processor.impl.processors.*;
 import me.rhys.bedrock.base.user.objects.BlockData;
 import me.rhys.bedrock.tinyprotocol.api.TinyProtocolHandler;
-import me.rhys.bedrock.util.EvictingMap;
+import me.rhys.bedrock.util.evicting.EvictingMap;
 import me.rhys.bedrock.util.PlayerLocation;
 import me.rhys.bedrock.util.box.BoundingBox;
 import org.bukkit.GameMode;

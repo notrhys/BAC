@@ -9,8 +9,7 @@ import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
 import me.rhys.bedrock.tinyprotocol.packet.in.WrappedInKeepAlivePacket;
 import me.rhys.bedrock.tinyprotocol.packet.in.WrappedInTransactionPacket;
-import me.rhys.bedrock.util.EvictingMap;
-import org.bukkit.Bukkit;
+import me.rhys.bedrock.util.evicting.EvictingMap;
 
 import java.util.Map;
 

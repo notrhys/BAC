@@ -80,6 +80,8 @@ public class SpeedB extends Check {
                                     max += .2;
                                 } else if (user.getElytraProcessor().isUsingElytra()) {
                                     max += user.getElytraProcessor().getFireworkBoost();
+                                } else if (user.getElytraProcessor().getLastElytraToggle().hasNotPassed()) {
+                                    max += .8;
                                 }
 
                                 if (deltaXZ > max && (this.airThreshold += 1.1) > (user.getActionProcessor()

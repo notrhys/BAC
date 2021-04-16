@@ -16,7 +16,7 @@ import me.rhys.bedrock.util.MaterialHelper;
 public class ElytraProcessor extends Processor {
 
     private boolean usingElytra;
-    private EventTimer lastElytraPacket, lastElytraTick;
+    private EventTimer lastElytraPacket, lastElytraTick, lastElytraToggle;
     private double invalidElytraThreshold, fireworkBoost;
 
     @Override
@@ -32,6 +32,7 @@ public class ElytraProcessor extends Processor {
                         this.fireworkBoost = 1.995;
                         this.usingElytra = true;
                         this.lastElytraPacket.reset();
+                        this.lastElytraToggle.reset();
                     }
                 }
                 break;
@@ -56,11 +57,13 @@ public class ElytraProcessor extends Processor {
 
                     if (this.lastElytraPacket.passed(5) && user.getMovementProcessor().isOnGround()) {
                         this.usingElytra = false;
+                        this.lastElytraToggle.reset();
                     }
 
 
                     if (deltaY == 0 || deltaXZ == 0) {
                         if ((this.invalidElytraThreshold += 1.2) > 4) {
+                            this.lastElytraToggle.reset();
                             this.usingElytra = false;
                             this.invalidElytraThreshold = 0;
                         }
@@ -79,5 +82,6 @@ public class ElytraProcessor extends Processor {
     public void setupTimers(User user) {
         this.lastElytraPacket = new EventTimer(20, user);
         this.lastElytraTick = new EventTimer(20, user);
+        this.lastElytraToggle = new EventTimer(20, user);
     }
 }
