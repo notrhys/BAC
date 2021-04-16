@@ -8,12 +8,11 @@ import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
 import me.rhys.bedrock.tinyprotocol.packet.out.WrappedOutVelocityPacket;
-import me.rhys.bedrock.util.EventTimer;
 import me.rhys.bedrock.util.evicting.EvictingList;
 
 import java.util.List;
 
-@CheckInformation(checkName = "Velocity", lagBack = false)
+@CheckInformation(checkName = "Velocity", lagBack = false, description = "Simple XZ based Velocity check")
 public class VelocityA extends Check {
 
     private final List<VelocityEntry> velocityEntries = new EvictingList<>(20);
