@@ -8,6 +8,7 @@ import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.user.User;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.concurrent.ThreadLocalRandom;

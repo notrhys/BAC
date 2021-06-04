@@ -43,11 +43,11 @@ public class ConnectionProcessor extends Processor {
 
     void process(User user, long time) {
         if (this.user.getConnectionMap().containsKey(time)) {
-            this.ping = (int) (System.currentTimeMillis() - this.user.getConnectionMap()
-                    .get(time));
+            this.ping = (int) (System.currentTimeMillis() - this.user.getConnectionMap().get(time));
             this.sentKeepAlives.put(time, System.currentTimeMillis());
             this.clientTick = (int) Math.ceil(this.ping / 50.0);
             user.getCheckManager().getCheckList().forEach(check -> check.onConnection(user));
+            user.getProcessorManager().getProcessors().forEach(processor -> processor.onConnection(user));
         }
     }
 }

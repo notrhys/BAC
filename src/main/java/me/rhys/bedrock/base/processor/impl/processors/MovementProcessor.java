@@ -12,7 +12,6 @@ import me.rhys.bedrock.tinyprotocol.api.ProtocolVersion;
 import me.rhys.bedrock.tinyprotocol.packet.in.WrappedInEntityActionPacket;
 import me.rhys.bedrock.tinyprotocol.packet.in.WrappedInFlyingPacket;
 import me.rhys.bedrock.util.EventTimer;
-import me.rhys.bedrock.util.MaterialHelper;
 import me.rhys.bedrock.util.MathUtil;
 import me.rhys.bedrock.util.PlayerLocation;
 import me.rhys.bedrock.util.block.BlockChecker;
@@ -30,10 +29,41 @@ public class MovementProcessor extends Processor {
     private int groundTicks, airTicks, lagBackTicks, serverAirTicks, serverGroundTicks, ignoreServerPositionTicks;
     private double deltaY, lastDeltaY, deltaXZ, lastDeltaXZ, deltaX, deltaZ;
     private PlayerLocation lastSlimeLocation;
+    private boolean sneaking, sprinting, lastSprint;
+
+    public PacketEvent lastPacket;
 
     @Override
     public void onPacket(PacketEvent event) {
         switch (event.getType()) {
+
+            case Packet.Client.ENTITY_ACTION: {
+                WrappedInEntityActionPacket wrappedInEntityActionPacket = new WrappedInEntityActionPacket(
+                        event.getPacket(), event.getUser().getPlayer());
+
+                switch (wrappedInEntityActionPacket.getAction()) {
+                    case START_SPRINTING: {
+                        this.sprinting = true;
+                        break;
+                    }
+
+                    case STOP_SPRINTING: {
+                        this.sprinting = false;
+                        break;
+                    }
+
+                    case START_SNEAKING: {
+                        this.sneaking = true;
+                        break;
+                    }
+
+                    case STOP_SNEAKING: {
+                        this.sneaking = false;
+                        break;
+                    }
+                }
+                break;
+            }
 
             case Packet.Server.POSITION: {
                 if (this.ignoreServerPositionTicks < 1) {
@@ -53,6 +83,10 @@ public class MovementProcessor extends Processor {
             case Packet.Client.POSITION: {
                 WrappedInFlyingPacket wrappedInFlyingPacket = new WrappedInFlyingPacket(event.getPacket(),
                         this.user.getPlayer());
+
+                this.lastPacket = event;
+                this.lastSprint = this.sprinting;
+                user.getPredictionEngine().processPacket(event);
 
                 double x = wrappedInFlyingPacket.getX();
                 double y = wrappedInFlyingPacket.getY();

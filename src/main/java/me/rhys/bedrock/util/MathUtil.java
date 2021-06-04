@@ -5,6 +5,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class MathUtil {
 
     public static Location getGroundLocation(User user) {
@@ -32,5 +35,9 @@ public class MathUtil {
     public static int floor(double var0) {
         int var2 = (int) var0;
         return var0 < var2 ? var2 - 1 : var2;
+    }
+
+    public static int roundHalfUp(int scale, double value) {
+        return (int) new BigDecimal(value).setScale(scale, RoundingMode.HALF_UP).doubleValue();
     }
 }

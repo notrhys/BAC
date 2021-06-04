@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.rhys.bedrock.base.event.CallableEvent;
 import me.rhys.bedrock.base.event.PacketEvent;
 import me.rhys.bedrock.base.user.User;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 @Getter
 public class Processor implements CallableEvent, ProcessorInterface {
