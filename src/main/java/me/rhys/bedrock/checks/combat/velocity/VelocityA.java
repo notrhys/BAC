@@ -33,7 +33,6 @@ public class VelocityA extends Check {
                             wrappedOutVelocityPacket.getY(),
                             wrappedOutVelocityPacket.getZ(),
                             user.getMovementProcessor().getDeltaY(),
-                            user.getConnectionProcessor().getClientTick(),
                             user.getTick()
                     ));
                 }
@@ -44,13 +43,15 @@ public class VelocityA extends Check {
             case Packet.Client.LOOK:
             case Packet.Client.POSITION_LOOK:
             case Packet.Client.POSITION: {
+
+                if (this.checkConditions(user)) {
+                    this.velocityEntries.clear();
+                    return;
+                }
+
                 if (this.velocityEntries.size() > 0) {
                     this.velocityEntries.forEach(velocityEntry -> {
-                        if (velocityEntry.tick++ > velocityEntry.clientTick) {
-                            if (this.checkConditions(user)) {
-                                this.velocityEntries.remove(velocityEntry);
-                                return;
-                            }
+                        if (velocityEntry.tick++ > 5) {
 
                             double x = velocityEntry.getX();
                             double z = velocityEntry.getZ();
@@ -69,7 +70,6 @@ public class VelocityA extends Check {
                                             "ratioZ: " + ratioZ,
                                             "deltaX: " + deltaX,
                                             "deltaZ: " + deltaZ,
-                                            "ct: " + velocityEntry.getClientTick(),
                                             "tick: " + velocityEntry.getTick(),
                                             "threshold: " + this.threshold
                                     );
@@ -96,7 +96,6 @@ public class VelocityA extends Check {
     public static class VelocityEntry {
         private final double x, y, z;
         private final double deltaY;
-        private final int clientTick;
         public int tick;
     }
 }

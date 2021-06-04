@@ -15,23 +15,19 @@ public class EventTimer {
     }
 
     public boolean hasNotPassed() {
-        int maxTick = this.max + this.user.getConnectionProcessor().getClientTick();
-        return (this.user.getTick() > maxTick && (this.user.getTick() - tick) < maxTick);
+        return (this.user.getTick() > this.max && (this.user.getTick() - tick) < this.max);
     }
 
     public boolean passed() {
-        int maxTick = this.max + this.user.getConnectionProcessor().getClientTick();
-        return (this.user.getTick() > maxTick && (this.user.getTick() - tick) > maxTick);
+        return (this.user.getTick() > this.max && (this.user.getTick() - tick) > this.max);
     }
 
     public boolean hasNotPassed(int ctick) {
-        int maxTick = ctick + this.user.getConnectionProcessor().getClientTick();
-        return (this.user.getTick() > maxTick && (this.user.getTick() - tick) < maxTick);
+        return (this.user.getTick() > this.max && (this.user.getTick() - tick) < this.max);
     }
 
     public boolean passed(int ctick) {
-        int maxTick = ctick + this.user.getConnectionProcessor().getClientTick();
-        return (this.user.getTick() > maxTick && (this.user.getTick() - tick) > maxTick);
+        return (this.user.getTick() > this.max && (this.user.getTick() - tick) > this.max);
     }
 
     public void reset() {

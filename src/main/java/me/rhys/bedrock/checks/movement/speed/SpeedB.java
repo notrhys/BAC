@@ -45,7 +45,7 @@ public class SpeedB extends Check {
                                     || this.blockLevelChangeTimer.hasNotPassed();
 
                             //Not the best but will do the job for now.
-                            double max = (expand ? .6325 : .3095);
+                            double max = (expand ? .6325 : .31156);
 
                             if (user.getPotionProcessor().getSpeedTicks() > 0) {
                                 max += (user.getPotionProcessor().getSpeedAmplifier() * 0.060);
