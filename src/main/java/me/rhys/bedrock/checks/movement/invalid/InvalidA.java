@@ -73,7 +73,8 @@ public class InvalidA extends Check {
                 || user.getBlockData().stairTicks > 0
                 || user.getBlockData().slabTicks > 0
                 || user.getBlockData().underBlockTicks > 0
-                || user.shouldCancel();
+                || user.shouldCancel()
+                || user.getCombatProcessor().getPreVelocityTimer().hasNotPassed();
     }
 
     void processLevelChange(User user) {
