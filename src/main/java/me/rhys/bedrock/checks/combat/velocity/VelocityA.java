@@ -47,6 +47,11 @@ public class VelocityA extends Check {
                 if (this.velocityEntries.size() > 0) {
                     this.velocityEntries.forEach(velocityEntry -> {
                         if (velocityEntry.tick++ > velocityEntry.clientTick) {
+                            if (this.checkConditions(user)) {
+                                this.velocityEntries.remove(velocityEntry);
+                                return;
+                            }
+
                             double x = velocityEntry.getX();
                             double z = velocityEntry.getZ();
                             double deltaX = Math.abs(Math.abs(user.getCurrentLocation().getX()
@@ -80,6 +85,10 @@ public class VelocityA extends Check {
                 break;
             }
         }
+    }
+
+    boolean checkConditions(User user) {
+        return user.getBlockData().liquidTicks > 0 || user.getBlockData().climbableTicks > 0;
     }
 
 

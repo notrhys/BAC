@@ -140,7 +140,8 @@ public abstract class Packet {
         public static final String TRANSACTION = CLIENT + "Transaction";
         public static final String BLOCK_DIG = CLIENT + "BlockDig";
         public static final String ENTITY_ACTION = CLIENT + "EntityAction";
-        public static final String USE_ENTITY = CLIENT + "UseEntity";
+        //wtf??
+        public static final String USE_ENTITY = "PacketPlayInUseEntity";
         public static final String WINDOW_CLICK = CLIENT + "WindowClick";
         public static final String CUSTOM_PAYLOAD = CLIENT + "CustomPayload";
         public static final String ARM_ANIMATION = CLIENT + "ArmAnimation";

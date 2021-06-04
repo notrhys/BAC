@@ -4,13 +4,13 @@ import lombok.Getter;
 import me.rhys.bedrock.base.check.api.Check;
 import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.checks.badpackets.BadPacketsA;
+import me.rhys.bedrock.checks.combat.Reach;
 import me.rhys.bedrock.checks.combat.killaura.KillauraA;
 import me.rhys.bedrock.checks.combat.killaura.KillauraB;
 import me.rhys.bedrock.checks.combat.velocity.VelocityA;
 import me.rhys.bedrock.checks.movement.flight.FlightA;
 import me.rhys.bedrock.checks.movement.flight.FlightB;
 import me.rhys.bedrock.checks.movement.flight.FlightC;
-import me.rhys.bedrock.checks.movement.invalid.InvalidA;
 import me.rhys.bedrock.checks.movement.nofall.NoFallA;
 import me.rhys.bedrock.checks.movement.speed.SpeedA;
 import me.rhys.bedrock.checks.movement.speed.SpeedB;
@@ -33,7 +33,8 @@ public class CheckManager {
         this.checkList.add(new SpeedA());
         this.checkList.add(new SpeedB());
         this.checkList.add(new BadPacketsA());
-        this.checkList.add(new InvalidA());
+        this.checkList.add(new Reach());
+
 
         this.checkList.forEach(check -> {
             check.setup();

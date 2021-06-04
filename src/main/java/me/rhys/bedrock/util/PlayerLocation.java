@@ -15,6 +15,7 @@ public class PlayerLocation {
     private final double x, y, z;
     private final float yaw, pitch;
     private final boolean clientGround;
+    private final long time = System.currentTimeMillis();
 
     public Vector toVector() {
         return new Vector(x, y, z);

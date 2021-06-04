@@ -8,6 +8,7 @@ import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
 import me.rhys.bedrock.tinyprotocol.packet.out.WrappedOutVelocityPacket;
 import me.rhys.bedrock.util.EventTimer;
+import org.bukkit.Bukkit;
 
 @ProcessorInformation(name = "Combat")
 @Getter

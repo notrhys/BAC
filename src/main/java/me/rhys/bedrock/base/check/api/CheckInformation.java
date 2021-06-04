@@ -12,4 +12,5 @@ public @interface CheckInformation {
     int punishmentVL() default 20;
     boolean lagBack() default true;
     boolean canPunish() default true;
+    boolean cancelAttack() default false;
 }

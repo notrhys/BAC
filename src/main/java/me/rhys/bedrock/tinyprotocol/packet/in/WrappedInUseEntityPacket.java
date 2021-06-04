@@ -43,22 +43,9 @@ public class WrappedInUseEntityPacket extends NMSObject {
         Enum fieldAct = Objects.nonNull(fetch(fieldAction)) ? fetch(fieldAction) : null;
         action = fieldAct == null ? EnumEntityUseAction.INTERACT_AT : EnumEntityUseAction.valueOf(fieldAct.name());
 
-      //  this.entity = Sparky.getInstance().getEntities()
-        //        .getOrDefault(player.getWorld().getUID(), new ArrayList<>()).stream()
-          //      .filter(entity1 -> id == entity1.getEntityId()).findAny().orElse(null);
-
         //fixes strange entity bug?
         this.entity = player.getWorld().getEntities().stream()
                 .filter(entity1 -> id == entity1.getEntityId()).findAny().orElse(null);
-
-        if (ProtocolVersion.getGameVersion().isOrAbove(ProtocolVersion.V1_8)) {
-            Object vec = fetch(vecField);
-            if (vec != null)
-                this.vec = new Vec3D(vec);
-        }
-        if (ProtocolVersion.getGameVersion().isOrAbove(ProtocolVersion.V1_9)) {
-            enumHand = WrappedEnumHand.getFromVanilla(fetch(handField));
-        } else enumHand = WrappedEnumHand.MAIN_HAND;
     }
 
     @Override

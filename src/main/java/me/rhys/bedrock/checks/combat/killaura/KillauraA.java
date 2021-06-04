@@ -7,13 +7,11 @@ import me.rhys.bedrock.base.user.User;
 import me.rhys.bedrock.tinyprotocol.api.Packet;
 import org.bukkit.Bukkit;
 
-@CheckInformation(checkName = "KillAura", description = "Checks if the player attacks on post")
+@CheckInformation(checkName = "KillAura", description = "Checks if the player attacks on post", cancelAttack = true)
 public class KillauraA extends Check {
 
     private long lastPosition;
     private double threshold;
-
-    private long test;
 
     @Override
     public void onPacket(PacketEvent event) {
@@ -23,7 +21,6 @@ public class KillauraA extends Check {
                 this.lastPosition = System.currentTimeMillis();
                 break;
             }
-
 
             case Packet.Client.USE_ENTITY: {
                 long delta = (System.currentTimeMillis() - this.lastPosition);

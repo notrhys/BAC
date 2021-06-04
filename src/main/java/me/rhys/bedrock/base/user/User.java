@@ -7,11 +7,10 @@ import me.rhys.bedrock.base.event.EventManager;
 import me.rhys.bedrock.base.processor.impl.ProcessorManager;
 import me.rhys.bedrock.base.processor.impl.processors.*;
 import me.rhys.bedrock.base.user.objects.BlockData;
-import me.rhys.bedrock.engine.PredictionEngine;
 import me.rhys.bedrock.tinyprotocol.api.TinyProtocolHandler;
-import me.rhys.bedrock.util.evicting.EvictingMap;
 import me.rhys.bedrock.util.PlayerLocation;
 import me.rhys.bedrock.util.box.BoundingBox;
+import me.rhys.bedrock.util.evicting.EvictingMap;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 
@@ -40,12 +39,11 @@ public class User {
     private final Map<Long, Long> connectionMap = new EvictingMap<>(100);
     private int tick;
 
-    private PredictionEngine predictionEngine;
-
     private BoundingBox boundingBox = new BoundingBox(0f, 0f, 0f, 0f, 0f, 0f);
     private PlayerLocation currentLocation = new PlayerLocation(null, 0, 0, 0, 0, 0,
             false);
     private PlayerLocation lastLocation = currentLocation;
+    public int cancelAttackTicks;
 
     public User(Player player) {
         this.player = player;
@@ -60,8 +58,6 @@ public class User {
     }
 
     private void setupProcessors() {
-        this.predictionEngine = new PredictionEngine(this);
-
         this.connectionProcessor = (ConnectionProcessor) this.processorManager.forClass(ConnectionProcessor.class);
         this.movementProcessor = (MovementProcessor) this.processorManager.forClass(MovementProcessor.class);
         this.actionProcessor = (ActionProcessor) this.processorManager.forClass(ActionProcessor.class);

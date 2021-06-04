@@ -85,7 +85,7 @@ public class SpeedB extends Check {
                                 }
 
                                 if (deltaXZ > max && (this.airThreshold += 1.1) > (user.getActionProcessor()
-                                        .getVelocityTimer().hasNotPassed(60) ? 3.4 : 2.94)) {
+                                        .getVelocityTimer().hasNotPassed(60) ? 3.8 : 3.2)) {
                                     this.flag(user,
                                             "tag: " + tag.name(),
                                             "speed: " + deltaXZ,
@@ -161,6 +161,7 @@ public class SpeedB extends Check {
 
     public enum Tags {
         GROUND,
-        AIR
+        AIR,
+        INVALID_JUMP
     }
 }

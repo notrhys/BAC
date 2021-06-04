@@ -86,7 +86,8 @@ public class MovementProcessor extends Processor {
 
                 this.lastPacket = event;
                 this.lastSprint = this.sprinting;
-                user.getPredictionEngine().processPacket(event);
+
+                user.cancelAttackTicks -= user.cancelAttackTicks > 0 ? 1 : 0;
 
                 double x = wrappedInFlyingPacket.getX();
                 double y = wrappedInFlyingPacket.getY();
@@ -100,11 +101,12 @@ public class MovementProcessor extends Processor {
 
                 if (wrappedInFlyingPacket.isPos()) {
                     this.lastDeltaY = this.deltaY;
-                    this.deltaY = (user.getCurrentLocation().getY() - user.getLastLocation().getY());
 
                     user.setLastLocation(user.getCurrentLocation());
                     user.setCurrentLocation(new PlayerLocation(user.getPlayer().getWorld(), x, y, z,
                             yaw, pitch, ground));
+
+                    this.deltaY = (user.getCurrentLocation().getY() - user.getLastLocation().getY());
 
                     this.lastPositionYGround = this.positionYGround;
                     this.positionYGround = y % 0.015625 < 0.009;
