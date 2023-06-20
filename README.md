@@ -17,10 +17,3 @@ Credit to Dawson for allowing me to use some Atlas utils (https://github.com/fun
 
 
 ![YourKit](https://www.yourkit.com/images/yklogo.png)
-------
-YourKit supports open source projects with innovative and intelligent tools
-for monitoring and profiling Java and .NET applications.
-YourKit is the creator of 
-https://www.yourkit.com/java/profiler/
-https://www.yourkit.com/.net/profiler/ YourKit .NET Profiler
-and YourKit YouMonitor - https://www.yourkit.com/youmonitor/
